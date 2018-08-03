@@ -1,0 +1,46 @@
+Arguments: 
+  C:\Program Files\nodejs\node.exe C:\Users\GARCIA\AppData\Roaming\npm\node_modules\yarn\bin\yarn.js add
+
+PATH: 
+  C:\ProgramData\Oracle\Java\javapath;C:\PHP;C:\Windows\System32\;C:\adb;C:\Program Files\Common Files\Autodesk Shared\;C:\Program Files (x86)\Autodesk\Backburner\;C:\Program Files (x86)\Bitvise SSH Client;C:\wamp64\bin\php\php5.6.19;C:/php7;C:\Program Files\Java\jdk1.7.0_80\bin;C:\Program Files\Git\cmd;C:\Program Files\CMake\bin;C:\Python27\Scripts;C:\Python27\scons;C:\Program Files\globals;C:\Program Files (x86)\A-Developer1412\HTTP Proxy Injector;C:\Windows;C:\Program Files (x86)\Internet Download Manager;C:\Windows\system32\config\systemprofile\.dnx\bin;C:\Program Files\Microsoft DNX\Dnvm\;C:\Program Files (x86)\Windows Kits\8.1\Windows Performance Toolkit\;D:\Android SDK\platform-tools;D:\REEngineer;D:\Go\src\github.com\alexeysoshin\smali2java;C:\Python27;C:\Program Files\PuTTY\;C:\Program Files (x86)\ITSecTeam\Havij Pro;D:\sqlmap\sqlmap-dev;C:\ProgramData\chocolatey\bin;D:\Android SDK\tools;D:\Android NDK\prebuilt\windows-x86_64\bin;D:\Android NDK\build;D:\Games\ant\bin;C:\Program Files\nodejs\;C:\Program Files\MongoDB\Server\4.0\bin;C:\Windows\System32\;C:\Program Files\Microsoft VS Code\bin;C:\Users\GARCIA\AppData\Roaming\Composer\vendor\bin;C:\Program Files\Java\jdk1.7.0_80\bin;C:\Program Files\CMake\bin;C:\Program Files (x86)\Nmap;C:\Users\GARCIA\AppData\Roaming\npm
+
+Yarn version: 
+  1.5.1
+
+Node version: 
+  8.11.3
+
+Platform: 
+  win32 x64
+
+npm manifest: 
+  {
+    "name": "app-server",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "",
+    "license": "ISC"
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
+
+Trace: 
+  Error: Missing list of packages to add to your project.
+      at new MessageError (C:\Users\GARCIA\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:186:110)
+      at Object.<anonymous> (C:\Users\GARCIA\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:40587:13)
+      at Generator.next (<anonymous>)
+      at step (C:\Users\GARCIA\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:98:30)
+      at C:\Users\GARCIA\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:116:14
+      at new Promise (<anonymous>)
+      at new F (C:\Users\GARCIA\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:23451:28)
+      at Object.<anonymous> (C:\Users\GARCIA\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:95:12)
+      at Object.run (C:\Users\GARCIA\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:40599:19)
+      at run (C:\Users\GARCIA\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:89113:20)
