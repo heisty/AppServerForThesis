@@ -38,6 +38,14 @@ router.route('/saveadminreport')
 	.post(TransactionController.saveAdminReport);
 router.route('/savetransaction')
 	.post(TransactionController.saveTransaction);
+router.route('/alreadyhaveservice')
+	.post(AuthenticationController.alreadyhaveservice);
+router.route('/addcustomerservice')
+	.post(CustomerInfoController.addcustomerservice);
+router.route('/updatecustomerservicestate')
+	.post(CustomerInfoController.updatecustomerservicestate);
+router.route('/returnactivecustomerservices')
+	.post(CustomerInfoController.returnActiveCustomerServices);
 
 
 // XXX

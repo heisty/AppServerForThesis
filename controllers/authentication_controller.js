@@ -13,15 +13,25 @@ function tokenForUser(user){
 	},config.secret);
 }
 exports.availservice = function(req,res,next){
-	var {userid,serviceid,servicetype} = req.body;
+	var {userid,serviceid,servicetype,staffid} = req.body;
 	var avail = new Avail({
 		userid: userid,
 		serviceid: serviceid,
-		servicetype: servicetype
+		servicetype: servicetype,
+		staffid: staffid
 	});
 	avail.save(function(err){
 		if(err){ return next(err)}
 		return res.json({"state":"Yosh"});
+	})
+}
+exports.alreadyhaveservice = function(req,res,next){
+	var { userid } = req.body;
+
+	Avail.findOne({userid:userid},function(err,avail){
+		if(err){return next(err)}
+		if(!avail){return res.json({canAvail:true})}
+		res.json({canAvail:false})
 	})
 }
 exports.staffBulk = function(req,res,next){
@@ -37,6 +47,7 @@ exports.services = function(req,res,next){
 		res.send({services});
 	});
 }
+
 exports.addservices = function(req,res,next){
 	var {title,description,price} = req.body;
 	var service = new Service({
