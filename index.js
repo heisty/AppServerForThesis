@@ -6,7 +6,7 @@ var router = require('./services/router');
 
 var app = express();
 
-mongoose.connect('mongodb://localhost/jnlbha');
+mongoose.connect('mongodb://jnladmin:jnlpassword123@ds131312.mlab.com:31312/jnlbah');
 
 app.use(morgan('combined'));
 app.use(bodyParser.json());
