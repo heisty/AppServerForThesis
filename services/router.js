@@ -26,10 +26,14 @@ router.route('/addservices')
 	.post(AuthenticationController.addservices);
 router.route('/staffBulk')
 	.post(AuthenticationController.staffBulk);
+router.route('/customerBulk')
+	.post(AuthenticationController.customerBulk);
 router.route('/availservice')
 	.post(AuthenticationController.availservice);
 router.route('/savecustomer')
 	.post(CustomerInfoController.savecustomer);
+router.route('/updateservices')
+	.post(AuthenticationController.updateservices);
 router.route('/savecustomerservices')
 	.post(CustomerInfoController.saveCustomerServices);
 router.route('/savecustomerlocation')
@@ -46,7 +50,22 @@ router.route('/updatecustomerservicestate')
 	.post(CustomerInfoController.updatecustomerservicestate);
 router.route('/returnactivecustomerservices')
 	.post(CustomerInfoController.returnActiveCustomerServices);
+router.route('/updatecustomerinfo')
+	.post(CustomerInfoController.updateCustomerInfo);
+router.route('/countactive')
+	.post(CustomerInfoController.countActive);
+router.route('/positionactive')
+	.post(CustomerInfoController.positionActive);
+router.route('/getrecords')
+	.post(CustomerInfoController.getRecords);
 
+// deletes
+router.route('/deletebyid')
+	.post(AuthenticationController.deleteById);
+router.route('/deleteservices')
+	.post(AuthenticationController.deleteservices);
+router.route('/deletebycustomerid')
+	.post(AuthenticationController.deleteByCustomerId);
 
 // XXX
 // function protected(req,res,next){

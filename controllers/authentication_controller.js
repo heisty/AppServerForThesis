@@ -12,13 +12,18 @@ function tokenForUser(user){
 		iat: timestamp,
 	},config.secret);
 }
+
+
 exports.availservice = function(req,res,next){
-	var {userid,serviceid,servicetype,staffid} = req.body;
+	var {userid,serviceid,servicename,servicetype,staffid,staffname,position} = req.body;
 	var avail = new Avail({
 		userid: userid,
 		serviceid: serviceid,
+		servicename: servicename,
 		servicetype: servicetype,
-		staffid: staffid
+		staffid: staffid,
+		staffname: staffname,
+		position: position
 	});
 	avail.save(function(err){
 		if(err){ return next(err)}
@@ -34,6 +39,43 @@ exports.alreadyhaveservice = function(req,res,next){
 		res.json({canAvail:false})
 	})
 }
+exports.customerBulk = function(req,res,next){
+	Customer.find(function(err,customer){
+	if(err){return res.json({'error': err})}
+		res.json({customer});
+	
+	});
+}
+
+exports.deleteservices = function(req,res,next){
+	let {serviceid} = req.body;
+	
+	Service.deleteOne({_id:serviceid},function(err,success){
+		if(err){return next(err)}
+		if(!success){return res.json({"NODEL":success})}
+		res.json("DEL");
+	})
+}
+
+exports.deleteById = function(req,res,next){
+	let {staffid} = req.body;
+	console.log(staffid);
+	User.deleteOne({_id:staffid},function(err,success){
+		if(err){return next(err)}
+		if(!success){return res.json({"NODEL":success})}
+		res.json("DEL");
+	})
+}
+exports.deleteByCustomerId = function(req,res,next){
+	let {userid} = req.body;
+	console.log(userid);
+	Customer.deleteOne({_id:userid},function(err,success){
+		if(err){return next(err)}
+		if(!success){return res.json({"NODEL":success})}
+		res.json("DEL");
+	})
+}
+
 exports.staffBulk = function(req,res,next){
 	User.find(function(err,staff){
 	if(err){return res.json({'error': err})}
@@ -58,6 +100,24 @@ exports.addservices = function(req,res,next){
 	service.save(function(err){
 		if(err){return next(err)}
 		res.json({respond: 'Yosh'});
+	})
+}
+
+exports.updateservices = function(req,res,next){
+	let { serviceid,title,description,price } = req.body;
+
+	let service = new Service({
+		title: title,
+		description: description,
+		price: price
+	});
+
+	let serviceObject = service.toObject();
+	delete serviceObject._id;
+
+	Service.update({_id:serviceid},serviceObject,function(err){
+		if(err){return next(err)}
+		return res.json("Updated");
 	})
 }
 exports.signin = function(req,res,next){

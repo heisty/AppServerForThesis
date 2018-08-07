@@ -13,7 +13,7 @@ app.use(bodyParser.json());
 app.use('/v1',router);
 
 var PORT = process.env.PORT || 3000;
-var HOST = process.env.HOST || '192.168.30.2';
+var HOST = process.env.HOST || '110.54.145.38';
 
 console.log('Listening on ',HOST,PORT);
 app.listen(PORT,HOST);

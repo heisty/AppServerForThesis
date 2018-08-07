@@ -7,28 +7,6 @@ const customerSchema = mongoose.Schema({
 	firstname: {type: String},
 	lastname: {type: String},
 	contact: {type: String},
-	address: [
-		{
-			street: {type: String},
-			brgy: {type: String},
-			city: {type: String}
-		}
-	],
-	services: [
-		{
-			title: {type: String},
-			chosenstaff: {type: String},
-			date: {type: Date},
-			active: {type: Boolean},
-
-		}
-	],
-	location: [
-		{
-			latitude: {type: String},
-			longitude: {type: String}
-		}
-	]
 });
 
 customerSchema.methods.comparePassword =  function(candidatePassword,callback){
