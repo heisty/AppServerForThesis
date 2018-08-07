@@ -9,6 +9,12 @@ var requireLogin = passport.authenticate('local',{session: false});
 
 // Auth 
 
+function app(req,res,next){
+	res.send("RUNNING LIVE SERVER FOR THESIS...")
+}
+ 
+router.route('/')
+		.get(app);
 
 router.route('/signup')
 	.post(AuthenticationController.signup);
