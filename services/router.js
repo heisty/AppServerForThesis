@@ -1,6 +1,7 @@
 var router = require('express').Router();
 const passportService = require('./passport');
 const passport = require('passport');
+const StaffController = require('../controllers/StaffController');
 const AuthenticationController = require('../controllers/authentication_controller');
 const CustomerInfoController = require('../controllers/CustomerInfoController');
 const TransactionController = require('../controllers/TransactionController');
@@ -64,6 +65,14 @@ router.route('/positionactive')
 	.post(CustomerInfoController.positionActive);
 router.route('/getrecords')
 	.post(CustomerInfoController.getRecords);
+router.route('/getappointment')
+	.post(StaffController.getAppointment);
+router.route('/getstafftransaction')
+	.post(StaffController.getStaffTransaction);
+router.route('/retrievestaffprofile')
+	.post(StaffController.retrieveStaffProfile);
+router.route('/updatestaffprofile')
+	.post(StaffController.updateStaffProfile);
 
 // deletes
 router.route('/deletebyid')
@@ -72,6 +81,8 @@ router.route('/deleteservices')
 	.post(AuthenticationController.deleteservices);
 router.route('/deletebycustomerid')
 	.post(AuthenticationController.deleteByCustomerId);
+router.route('/deleteactiveavail')
+	.post(StaffController.deleteActiveAvail);
 
 // XXX
 // function protected(req,res,next){

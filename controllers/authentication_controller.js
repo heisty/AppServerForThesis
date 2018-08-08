@@ -23,7 +23,8 @@ exports.availservice = function(req,res,next){
 		servicetype: servicetype,
 		staffid: staffid,
 		staffname: staffname,
-		position: position
+		position: position,
+		date: new Date(),
 	});
 	avail.save(function(err){
 		if(err){ return next(err)}

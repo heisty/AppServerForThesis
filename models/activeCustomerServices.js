@@ -8,7 +8,7 @@ const activeCustomerService = mongoose.Schema({
 	staffid: {type: String},
 	staffname: {type: String},
 	date: {type: Date},
-	active: {type: Boolean}
+	
 });
 
 module.exports = mongoose.model('activeServices',activeCustomerService);

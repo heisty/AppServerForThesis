@@ -39,7 +39,6 @@ exports.saveCustomerServices = function(req,res,next){
 		title,
 		chosentype,
 		date,
-		active
 	} = req.body;
 
 	var customer = new Customer({
@@ -48,7 +47,7 @@ exports.saveCustomerServices = function(req,res,next){
 				title: title,
 				chosentype: chosentype,
 				date: date,
-				active: active
+				
 			}
 		],
 	});
@@ -99,7 +98,7 @@ exports.addcustomerservice = function(req,res,next){
 		staffid: staffid,
 		staffname: staffname,
 		date: date,
-		active: active,
+		
 	});
 
 	activeservice.save(function(err){

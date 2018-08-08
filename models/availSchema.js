@@ -7,7 +7,8 @@ const availSchema = mongoose.Schema({
 	servicetype: {type: String},
 	staffid: {type: String},
 	staffname: {type: String},
-	position: {type: Number}
+	position: {type: Number},
+	date: {type: Date}
 });
 
 module.exports = mongoose.model('avail',availSchema);
