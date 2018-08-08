@@ -1,6 +1,7 @@
 const Avail = require('../models/availSchema');
 const Transaction = require('../models/activeCustomerServices');
 const Staff = require('../models/staffschema');
+const Admin = require('../models/adminSchema');
 
 exports.getAppointment = function(req,res,next){
 	var {staffid} = req.body;
@@ -8,7 +9,7 @@ exports.getAppointment = function(req,res,next){
 	Avail.find({staffid: staffid},function(err,appointment){
 		if(err){ return next(err)}
 		if(!appointment){ return res.json("No Appointment"); }
-		res.json(appointment);
+		res.json({appointment:appointment});
 	})
 }
 
@@ -27,7 +28,7 @@ exports.getStaffTransaction = function(req,res,next){
 	Transaction.find({staffid: staffid},function(err,transaction){
 		if(err){return next(err)}
 		if(!transaction){ return res.json("No Transaction") }
-		res.json(transaction);
+		res.json({transaction:transaction});
 	})
 }
 
@@ -37,7 +38,7 @@ exports.retrieveStaffProfile = function(req,res,next){
 	Staff.find({_id:staffid},function(err,staff){
 		if(err){return next(err)}
 		if(!staff){ return res.json("No Profile") }
-		res.json(staff);
+		res.json({staff});
 	})
 }
 
@@ -79,5 +80,28 @@ exports.updateStaffProfile = function(req,res,next){
 	Staff.update({_id:staffid},staffObject,function(err){
 		if(err){return next(err)}
 		res.json("Updated");
+	})
+}
+
+exports.loginAdmin = function(req,res,next){
+	let {username,password} = req.body;
+
+	Admin.findOne({username:username,password:password},function(err,success){
+		if(err){return next(err)}
+		res.json(success);
+	})
+}
+
+exports.signupAdmin = function(req,res,next){
+	let {username,password} = req.body;
+
+	let admin = new Admin({
+		username: username,
+		password: password
+	});
+
+	admin.save(function(err){
+		if(err){return next(err)}
+		res.json("Success");
 	})
 }

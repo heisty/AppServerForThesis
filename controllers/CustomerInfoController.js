@@ -88,10 +88,11 @@ exports.saveCustomerLocation = function(req,res,next){
 }
 
 exports.addcustomerservice = function(req,res,next){
-	let {userid,serviceid,servicename,servicetype,staffid,staffname,date,active} = req.body;
+	let {userid,username,serviceid,servicename,servicetype,staffid,staffname,date,active} = req.body;
 
 	var activeservice = new ActiveService({
 		userid: userid,
+		username: username,
 		serviceid: serviceid,
 		servicename: servicename,
 		servicetype: servicetype,

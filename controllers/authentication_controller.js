@@ -15,9 +15,10 @@ function tokenForUser(user){
 
 
 exports.availservice = function(req,res,next){
-	var {userid,serviceid,servicename,servicetype,staffid,staffname,position} = req.body;
+	var {userid,username,serviceid,servicename,servicetype,staffid,staffname,position} = req.body;
 	var avail = new Avail({
 		userid: userid,
+		username: username,
 		serviceid: serviceid,
 		servicename: servicename,
 		servicetype: servicetype,

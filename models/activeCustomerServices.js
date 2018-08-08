@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 const activeCustomerService = mongoose.Schema({
 	userid: {type:String},
+	username: {type: String},
 	serviceid: {type: String},
 	servicename: {type: String},
 	servicetype: {type: String},

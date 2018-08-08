@@ -73,6 +73,10 @@ router.route('/retrievestaffprofile')
 	.post(StaffController.retrieveStaffProfile);
 router.route('/updatestaffprofile')
 	.post(StaffController.updateStaffProfile);
+router.route('/loginadmin')
+	.post(StaffController.loginAdmin);
+router.route('/signupadmin')
+	.post(StaffController.signupAdmin);
 
 // deletes
 router.route('/deletebyid')
