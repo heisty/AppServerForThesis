@@ -1,6 +1,7 @@
 const Customer = require('../models/customerschema');
 const ActiveService = require('../models/activeCustomerServices');
 const Avail = require('../models/availSchema');
+const Address = require('../models/CustomerAddress');
 
 exports.savecustomer = function(req,res,next){
 	var {
@@ -151,11 +152,51 @@ exports.updateCustomerInfo = function(req,res,next){
 
 }
 
+exports.updateCustomerAddress = function(req,res,next){
+	let {userid,street,brgy,city,latitude,longitude} = req.body;
+
+	let address = new Address({
+		userid: userid,
+		street: street,
+		brgy: brgy,
+		city: city,
+		latitude: latitude,
+		longitude: longitude,
+	});
+
+	let upAddress = new Address({
+		street: street,
+		brgy: brgy,
+		city: city,
+		latitude: latitude,
+		longitude: longitude,
+	});
+
+	Address.findOne({userid: userid},function(err,existing){
+		if(err){ return next(err)}
+		if(!existing){
+			address.save(function(err){
+				if(err){return next(err)}
+				res.json("Success");
+			})
+		}
+		if(existing){
+		let upAddr = upAddress.toObject();
+		delete upAddr._id;
+
+		Address.update({userid:userid},upAddr,function(err){
+			if(err){return next(err)}
+			res.json("Updated");
+		})
+		}
+	})
+}
+
 exports.returnActiveCustomerServices = function(req,res,next){
 	var {userid} = req.body;
 
 
-	ActiveService.find({userid:userid},function(err,services){
+	Avail.find({userid:userid},function(err,services){
 		if(err){return next(err)}
 		res.json({services});
 	})
@@ -186,6 +227,6 @@ exports.positionActive = function(req,res,next){
 exports.getRecords = function(req,res,next){
 	ActiveService.find({},function(err,records){
 		if(err){ return next(err)}
-		res.json({records:records});
+		res.json({records});
 	})
 }

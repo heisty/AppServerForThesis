@@ -67,6 +67,8 @@ router.route('/getrecords')
 	.post(CustomerInfoController.getRecords);
 router.route('/getappointment')
 	.post(StaffController.getAppointment);
+router.route('/updatecustomeraddress')
+	.post(CustomerInfoController.updateCustomerAddress);
 router.route('/getstafftransaction')
 	.post(StaffController.getStaffTransaction);
 router.route('/retrievestaffprofile')
@@ -77,6 +79,8 @@ router.route('/loginadmin')
 	.post(StaffController.loginAdmin);
 router.route('/signupadmin')
 	.post(StaffController.signupAdmin);
+router.route('/customerqueue')
+	.post(StaffController.customerQueue);
 
 // deletes
 router.route('/deletebyid')

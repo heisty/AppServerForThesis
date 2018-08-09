@@ -105,3 +105,11 @@ exports.signupAdmin = function(req,res,next){
 		res.json("Success");
 	})
 }
+
+exports.customerQueue = function(req,res,next){
+	let {position} = req.body;
+	Avail.update({servicetype:'salon',position: {$gt: position}},{$inc:{position: -1}},{multi: true},function(err,next){
+		if(err){return next(err)}
+		res.json("Updated");
+	})
+}
