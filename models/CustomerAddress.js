@@ -4,6 +4,7 @@ const customerAddress = mongoose.Schema({
 	userid: {type: String},
 	street: {type: String},
 	brgy: {type: String},
+	munc: {type: String},
 	city: {type: String},
 	latitude: {type: String},
 	longitude: {type: String}

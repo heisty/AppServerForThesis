@@ -12,7 +12,25 @@ exports.getAppointment = function(req,res,next){
 		res.json({appointment:appointment});
 	})
 }
+exports.addSkills = function(req,res,next){
+	var {staffid,skill} = req.body;
 
+	var staff = new Staff({
+		skills: [
+			{
+				title: skill
+			}
+		]
+	});
+
+	var staffObject = staff.toObject();
+	delete staffObject._id;
+
+	Staff.update({_id:staffid},{$push: staffObject},function(err,updated){
+		if(err){next(err)}
+		if(updated){return res.json("Success")}
+	});
+}
 exports.deleteActiveAvail = function(req,res,next){
 	let { availid } = req.body;
 	Avail.deleteOne({_id:availid},function(err,deleted){

@@ -209,13 +209,21 @@ exports.returnActiveCustomerServices = function(req,res,next){
 }
 
 exports.countActive = function(req,res,next){
-	Avail.count({servicetype:"salon"},function(err,count){
+	var {staffid} = req.body;
+	Avail.count({servicetype:"salon",staffid:staffid},function(err,count){
 		if(err){return next(err)}
 		return res.json({count});
 	})
 }
+exports.getActiveStaffId = function(req,res,next){
+	var {userid} = req.body;
+	Avail.findOne({userid:userid},{'staffid':1,_id:0},{lean:true},function(err,staffid){
+		if(err){return next(err)}
+		res.json(staffid);
+	})
+}
 exports.positionActive = function(req,res,next){
-	let {userid} = req.body;
+	let {userid,staffid} = req.body;
 
 	Avail.findOne({userid:userid},{'position':1,'_id':0},{lean: true},function(err,active){
 		if(err){return next(err)}

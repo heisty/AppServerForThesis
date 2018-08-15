@@ -33,6 +33,8 @@ router.route('/addservices')
 	.post(AuthenticationController.addservices);
 router.route('/staffBulk')
 	.post(AuthenticationController.staffBulk);
+router.route('/staffSpecialBulk')
+	.post(AuthenticationController.staffSpecialBulk);
 router.route('/customerBulk')
 	.post(AuthenticationController.customerBulk);
 router.route('/availservice')
@@ -65,6 +67,8 @@ router.route('/positionactive')
 	.post(CustomerInfoController.positionActive);
 router.route('/getrecords')
 	.post(CustomerInfoController.getRecords);
+router.route('/getactivestaffid')
+	.post(CustomerInfoController.getActiveStaffId);
 router.route('/getappointment')
 	.post(StaffController.getAppointment);
 router.route('/updatecustomeraddress')
@@ -81,6 +85,8 @@ router.route('/signupadmin')
 	.post(StaffController.signupAdmin);
 router.route('/customerqueue')
 	.post(StaffController.customerQueue);
+router.route('/addskills')
+	.post(StaffController.addSkills);
 
 // deletes
 router.route('/deletebyid')

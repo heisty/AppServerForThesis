@@ -86,6 +86,15 @@ exports.staffBulk = function(req,res,next){
 	});
 }
 
+exports.staffSpecialBulk = function(req,res,next){
+	let {servicename} = req.body;
+	User.find({'skills.title':servicename},function(err,staff){
+	if(err){return res.json({'error': err})}
+		res.json({staff});
+	
+	});
+}
+
 exports.services = function(req,res,next){
 	Service.find(function(err,services){
 		res.send({services});
@@ -147,8 +156,7 @@ exports.customersignin = function(req,res,next){
 	
 }
 exports.customersignup = function(req,res,next){
-	var username = req.body.username;
-	var password = req.body.password;
+	var { username,password,skill } = req.body;
 	
 
 	if(!username || !password){
@@ -161,6 +169,7 @@ exports.customersignup = function(req,res,next){
 		var customer = new Customer({
 			username: username,
 			password: password,
+			
 			
 
 		});
@@ -175,9 +184,7 @@ exports.customersignup = function(req,res,next){
 }
 exports.signup = function(req,res,next){
 
-	var username=req.body.username;
-	var password=req.body.password;
-	var firstname=req.body.firstname;
+	var {username,password,firstname,skill} = req.body;
 
 	console.log(username,password);
 
@@ -192,6 +199,11 @@ exports.signup = function(req,res,next){
 			username: username,
 			password: password,
 			firstname: firstname,
+			skills: [
+				{
+					title:skill
+				}
+			]
 		});
 
 		user.save(function(err){
