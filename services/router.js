@@ -7,6 +7,7 @@ const CustomerInfoController = require('../controllers/CustomerInfoController');
 const TransactionController = require('../controllers/TransactionController');
 var requireAuth = passport.authenticate('jwt',{session: false});
 var requireLogin = passport.authenticate('local',{session: false});
+const Verify = require('../controllers/Verify');
 
 // Auth 
 
@@ -67,6 +68,8 @@ router.route('/positionactive')
 	.post(CustomerInfoController.positionActive);
 router.route('/getrecords')
 	.post(CustomerInfoController.getRecords);
+router.route('/getcustomerinfo')
+	.post(CustomerInfoController.getCustomerInfo);
 router.route('/getactivestaffid')
 	.post(CustomerInfoController.getActiveStaffId);
 router.route('/getappointment')
@@ -87,6 +90,8 @@ router.route('/customerqueue')
 	.post(StaffController.customerQueue);
 router.route('/addskills')
 	.post(StaffController.addSkills);
+router.route('/verify')
+	.post(Verify.verify);
 
 // deletes
 router.route('/deletebyid')
@@ -97,6 +102,13 @@ router.route('/deletebycustomerid')
 	.post(AuthenticationController.deleteByCustomerId);
 router.route('/deleteactiveavail')
 	.post(StaffController.deleteActiveAvail);
+
+
+// PRODs
+
+
+router.route('/orderservice')
+	.post(StaffController.orderService);
 
 // XXX
 // function protected(req,res,next){

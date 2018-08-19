@@ -2,6 +2,7 @@ const Avail = require('../models/availSchema');
 const Transaction = require('../models/activeCustomerServices');
 const Staff = require('../models/staffschema');
 const Admin = require('../models/adminSchema');
+const Order = require('../models/Orders');
 
 exports.getAppointment = function(req,res,next){
 	var {staffid} = req.body;
@@ -129,5 +130,37 @@ exports.customerQueue = function(req,res,next){
 	Avail.update({servicetype:'salon',position: {$gt: position}},{$inc:{position: -1}},{multi: true},function(err,next){
 		if(err){return next(err)}
 		res.json("Updated");
+	})
+}
+
+exports.orderService = function(req,res,next){
+	let {
+		userid,
+		serviceid,
+		servicename,
+		staffid,
+		staffname,
+		scheduledate,
+		scheduletime,
+		orderstatus,
+		orderaccepted,
+	} = req.body;
+
+	var order = new Order({
+		userid: userid,
+		serviceid: serviceid,
+		servicename:servicename,
+		staffid:staffid,
+		staffname:staffname,
+		scheduledate:scheduledate,
+		scheduletime:scheduletime,
+		orderstatus:orderstatus,
+		orderaccepted:orderaccepted,
+
+	});
+
+	order.save(function(err){
+		if(err){return next(err)}
+		res.json("Saved");
 	})
 }

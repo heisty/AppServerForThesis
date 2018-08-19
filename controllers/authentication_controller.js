@@ -156,8 +156,11 @@ exports.customersignin = function(req,res,next){
 	
 }
 exports.customersignup = function(req,res,next){
-	var { username,password,skill } = req.body;
+	var { username,password,firstname,lastname,email,contact,street,brgy,munc,city,lat,long } = req.body;
 	
+	User.findOne({username:username},function(err,exist){
+		if(err){return next(err)}
+		if(exist){return res.status(422).json({error: 'taken',statusCode: '422'});}
 
 	if(!username || !password){
 		return res.status(422).json({error: 'Please provide'});
@@ -169,8 +172,16 @@ exports.customersignup = function(req,res,next){
 		var customer = new Customer({
 			username: username,
 			password: password,
-			
-			
+			firstname: firstname,
+			lastname: lastname,
+			email: email,
+			contact: contact,
+			street: street,
+			brgy: brgy,
+			munc: munc,
+			city: city,
+			lat: lat,
+			long: long,
 
 		});
 
@@ -178,6 +189,7 @@ exports.customersignup = function(req,res,next){
 			if(err) {return next(err)}
 			res.json({userid: customer._id,username: customer.username})
 		})
+	})
 	})
 
 

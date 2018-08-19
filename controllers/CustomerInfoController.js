@@ -134,12 +134,24 @@ exports.updatecustomerservicestate = function(req,res,next){
 }
 
 exports.updateCustomerInfo = function(req,res,next){
-	let { userid,firstname,lastname,contact } = req.body;
+	let { userid,firstname,lastname,email,contact,street,brgy,munc,city,lat,long } = req.body;
+
+
+
+	console.log(userid,firstname);
 
 	let customer = new Customer({
 		firstname: firstname,
 		lastname: lastname,
+		email: email,
 		contact: contact,
+		street: street,
+		brgy: brgy,
+		munc: munc,
+		city: city,
+		lat: lat,
+		long: long
+
 	});
 
 	let customerObject = customer.toObject();
@@ -153,12 +165,13 @@ exports.updateCustomerInfo = function(req,res,next){
 }
 
 exports.updateCustomerAddress = function(req,res,next){
-	let {userid,street,brgy,city,latitude,longitude} = req.body;
+	let {userid,street,brgy,munc,city,latitude,longitude} = req.body;
 
 	let address = new Address({
 		userid: userid,
 		street: street,
 		brgy: brgy,
+		munc: munc,
 		city: city,
 		latitude: latitude,
 		longitude: longitude,
@@ -168,6 +181,7 @@ exports.updateCustomerAddress = function(req,res,next){
 		street: street,
 		brgy: brgy,
 		city: city,
+		munc: munc,
 		latitude: latitude,
 		longitude: longitude,
 	});
@@ -236,5 +250,16 @@ exports.getRecords = function(req,res,next){
 	ActiveService.find({},function(err,records){
 		if(err){ return next(err)}
 		res.json({records});
+	})
+}
+
+exports.getCustomerInfo = function(req,res,next){
+	let {
+		userid
+	} = req.body;
+	Customer.find({_id:userid},function(err,userinfo){
+		if(err){return next(err)}
+		console.log(userinfo);
+		res.json({userinfo:userinfo});
 	})
 }
