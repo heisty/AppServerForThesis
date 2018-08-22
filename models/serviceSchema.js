@@ -4,8 +4,23 @@ const serviceSchema = mongoose.Schema({
 	title: {type: String},
 	description: {type: String},
 	time: {type: String},
-	category: {type: String},
+	types: [{
+			title: {type: String},
+			description: {type: String},
+			price: {type: String},
+			available: {type: Boolean},
+			featured: {type: Boolean},
+			servicetype: [
+				{s_type: {type:String}}
+			]
+		}],
+	category: [
+		{
+			cat:{type: String},
+		}
+	],
 	featured: {type: Boolean},
+	available: {type: Boolean},
 	type: [
 		{servicetype: {type: String}}
 	],

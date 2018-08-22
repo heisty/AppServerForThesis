@@ -96,17 +96,45 @@ exports.staffSpecialBulk = function(req,res,next){
 }
 
 exports.services = function(req,res,next){
-	Service.find(function(err,services){
-		res.send({services});
+	let {
+		category
+	} = req.body;
+	Service.find({'category.cat':category},function(err,service){
+		res.send({service});
 	});
 }
 
 exports.addservices = function(req,res,next){
-	var {title,description,price} = req.body;
+	var {title,description,cat,featured,available,servicetype,price,t_title,t_description,t_price,t_available,t_featured,t_servicetype} = req.body;
 	var service = new Service({
 		title: title,
 		description: description,
+		types: [{
+			title: t_title,
+			description: t_description,
+			price: t_price,
+			available: t_available,
+			featured: t_featured,
+			servicetype: [
+				{type: t_servicetype}
+			]
+		}],
+		category: [
+			{
+				cat: "All",
+			},
+			{
+				
+				cat:cat
+			}
+		],
+		featured: featured,
+		available: available,
+		type: [
+			{servicetype: servicetype}
+		],
 		price: price,
+
 	});
 	service.save(function(err){
 		if(err){return next(err)}

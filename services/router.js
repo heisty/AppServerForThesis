@@ -2,6 +2,7 @@ var router = require('express').Router();
 const passportService = require('./passport');
 const passport = require('passport');
 const StaffController = require('../controllers/StaffController');
+const Product = require('../controllers/ProductController');
 const AuthenticationController = require('../controllers/authentication_controller');
 const CustomerInfoController = require('../controllers/CustomerInfoController');
 const TransactionController = require('../controllers/TransactionController');
@@ -109,6 +110,12 @@ router.route('/deleteactiveavail')
 
 router.route('/orderservice')
 	.post(StaffController.orderService);
+router.route('/addcat')
+	.post(Product.addCat);
+router.route('/getcat')
+	.post(Product.getCat);
+router.route('/getservicetype')
+	.post(Product.getServiceType);
 
 // XXX
 // function protected(req,res,next){
