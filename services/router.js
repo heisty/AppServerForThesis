@@ -2,6 +2,7 @@ var router = require('express').Router();
 const passportService = require('./passport');
 const passport = require('passport');
 const StaffController = require('../controllers/StaffController');
+const Schedule = require('../controllers/Schedule');
 const Product = require('../controllers/ProductController');
 const AuthenticationController = require('../controllers/authentication_controller');
 const CustomerInfoController = require('../controllers/CustomerInfoController');
@@ -117,6 +118,17 @@ router.route('/getcat')
 router.route('/getservicetype')
 	.post(Product.getServiceType);
 
+
+// schedules
+
+
+router.route('/getscheduledemployees')
+	.post(Schedule.getScheduledEmployees);
+
+router.route('/getlaterscheduled')
+	.post(Schedule.getLaterScheduled);
+router.route('/getneveravailable')
+	.post(Schedule.getNeverAvailable);
 // XXX
 // function protected(req,res,next){
 // 	res.send("Secret");

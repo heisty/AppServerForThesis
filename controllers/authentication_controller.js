@@ -224,7 +224,28 @@ exports.customersignup = function(req,res,next){
 }
 exports.signup = function(req,res,next){
 
-	var {username,password,firstname,skill} = req.body;
+	var {
+		username,
+		password,
+		email,
+		avatarLink,
+		firstname,
+		lastname,
+		contactnumber,
+		description,
+		available,
+		day,
+		m_time,
+		m_endTime,
+		a_time,
+		a_endTime,
+		n_time,
+		n_endTime,
+		address,
+		lat,
+		long,
+		skill
+	} = req.body;
 
 	console.log(username,password);
 
@@ -237,8 +258,37 @@ exports.signup = function(req,res,next){
 
 		var user = new User({
 			username: username,
+			email:email,
+			avatarLink: avatarLink,
 			password: password,
 			firstname: firstname,
+			lastname: lastname,
+			contactnumber: contactnumber,
+			description: description,
+			address: address,
+			available:available,
+			schedule: [
+				{
+					day: day,
+					
+					morning: {
+						_time:m_time,
+						_endTime:m_endTime,
+					},
+					afternoon: {
+						_time:a_time,
+						_endTime:a_endTime,
+					},
+					night: {
+						_time:n_time,
+						_endTime:n_endTime,
+					}
+				}
+			],
+			location: {
+				latitude:lat,
+				longitude:long
+			},
 			skills: [
 				{
 					title:skill

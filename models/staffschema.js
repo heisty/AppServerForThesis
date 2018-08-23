@@ -11,19 +11,37 @@ const staffSchema = mongoose.Schema({
 	contactnumber: {type: String},
 	description: {type: String},
 	address: {type: String},
-	location: [
+	available: {type: Boolean},
+	schedule: [
+		{
+			day:{type: String},
+			morning: {
+				_time: {type: Number},
+				_endTime: {type: Number},
+			},
+			afternoon: {
+				_time: {type: Number},
+				_endTime: {type: Number},
+			},
+			night: {
+				_time: {type: Number},
+				_endTime: {type: Number}
+			}
+		}
+	],
+	location: 
 		{
 
 			latitude: {type: String},
 			longitude: {type: String}
 
 		}
-	],
-	skills: [
+	,
+	skills: 
 		{
 			title:{type: String}
 		}
-	]
+	
 });
 
 staffSchema.methods.comparePassword = function(candidatePassword,callback){
