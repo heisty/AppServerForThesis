@@ -119,6 +119,12 @@ router.route('/getservicetype')
 	.post(Product.getServiceType);
 
 
+// change pass
+router.route('/changepass')
+	.post(AuthenticationController.changeCustomerPassword);
+
+
+
 // schedules
 
 
@@ -129,6 +135,15 @@ router.route('/getlaterscheduled')
 	.post(Schedule.getLaterScheduled);
 router.route('/getneveravailable')
 	.post(Schedule.getNeverAvailable);
+router.route('/setappointment')
+	.post(Schedule.setAppointment);
+router.route('/checkappointment')
+	.post(Schedule.checkAppointment);
+router.route('/getmyapp')
+	.post(Schedule.getMyAppointment);
+router.route('/mypos')
+	.post(Schedule.myPositionOnQueue);
+	
 // XXX
 // function protected(req,res,next){
 // 	res.send("Secret");

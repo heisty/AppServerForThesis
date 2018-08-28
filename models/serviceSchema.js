@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const serviceSchema = mongoose.Schema({
 	title: {type: String},
 	description: {type: String},
-	time: {type: String},
+	duration: {type: Number},
 	types: [{
 			title: {type: String},
 			description: {type: String},

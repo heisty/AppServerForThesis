@@ -259,7 +259,7 @@ exports.getCustomerInfo = function(req,res,next){
 	} = req.body;
 	Customer.find({_id:userid},function(err,userinfo){
 		if(err){return next(err)}
-		console.log(userinfo);
+		
 		res.json({userinfo:userinfo});
 	})
 }

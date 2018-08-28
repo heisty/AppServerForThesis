@@ -4,6 +4,7 @@ const Avail = require('../models/availSchema');
 const Service = require('../models/serviceSchema');
 const jwt = require('jwt-simple');
 const config = require('../config.js');
+const bcrypt = require('bcrypt-nodejs');
 
 function tokenForUser(user){
 	var timestamp = new Date().getTime();
@@ -11,6 +12,47 @@ function tokenForUser(user){
 		sub: user.id,
 		iat: timestamp,
 	},config.secret);
+}
+
+exports.changeCustomerPassword = function(req,res,next){
+	let {
+		userid,
+		oldpassword,
+		password
+	} = req.body;
+
+	
+
+	Customer.findOne({_id:userid},function(err,customer){
+		if(err){return next(err)}
+		if(customer){
+			customer.comparePassword(oldpassword,function(err,isMatch){
+				if(isMatch){
+				
+				bcrypt.genSalt(10,function(err,salt){
+					if(err) {return next(err)}
+					bcrypt.hash(password,salt,null,function(err,hash){
+					password = hash;
+					
+					Customer.update({_id:userid},{$set: {password:hash}},function(err){
+					if(err){return next(err)}
+					res.json("Updated");
+					})
+
+
+					});
+				});		
+
+				
+
+
+				}
+				if(!isMatch){
+					res.json({status:'000'});
+				}
+			})
+		}
+	})
 }
 
 

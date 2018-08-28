@@ -38,4 +38,5 @@ customerSchema.pre('save',function(next){
 	}
 });
 
+
 module.exports = mongoose.model('customer',customerSchema);

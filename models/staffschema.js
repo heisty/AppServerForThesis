@@ -12,6 +12,7 @@ const staffSchema = mongoose.Schema({
 	description: {type: String},
 	address: {type: String},
 	available: {type: Boolean},
+
 	schedule: [
 		{
 			day:{type: String},
@@ -27,6 +28,23 @@ const staffSchema = mongoose.Schema({
 				_time: {type: Number},
 				_endTime: {type: Number}
 			}
+		}
+	],
+
+	appointment: [
+		{
+			userid: {type: String},
+			username: {type: String},
+			serviceid: {type: String},
+			servicename: {type: String},
+			day:{type:String},
+			date: {type: Date},
+			status: {type: String},
+			accepted: {type: String},
+			duration: {type: Number},
+			time: {type: Number},
+			suffix: {type: String},
+			position: {type: Number}
 		}
 	],
 	location: 
