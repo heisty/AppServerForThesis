@@ -105,6 +105,14 @@ router.route('/deletebycustomerid')
 router.route('/deleteactiveavail')
 	.post(StaffController.deleteActiveAvail);
 
+// Transactions
+
+router.route('/getpayments')
+	.post(TransactionController.getPayments);
+
+router.route('/getsppayments')
+	.post(TransactionController.getSpecificPayments);
+
 
 // PRODs
 

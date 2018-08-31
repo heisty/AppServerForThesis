@@ -138,45 +138,46 @@ exports.checkAppointment = function(req,res,next){
 }
 
 
-exports.myPositionOnQueue = function(req,res,next){
+exports.myPositionOnQueue = async function(req,res,next){
 	let {
+
 		staffid,
 		userid
 	} = req.body;
+	let timex1;
 
-	let timex;
-	Staff.findOne({_id:staffid,'appointment.userid':userid},{_id:0,'appointment.time':1,'appointment.$':1},function(err,found){
-		timex=found;
-	})
-
-
-	Staff.find({_id:staffid},{_id:0,'appointment.time':1},function(err,appointments){
-		if(err){return next(err)}
-		let data = appointments.map(function(time){
-			return {
-				time_:appointments[0].appointment
-			}
-		});
-
-		let data_ = (JSON.stringify(data[0].time_)).replace(/[/{}\"time\":]/g, '').replace(/[\[\]']/g,'');
-		finaldata=data_.toString().split(',')
-		pos = finaldata.indexOf("80")+1;
-		res.json(timex);
-
+	try{
+	await Staff.findOne({_id:staffid,'appointment.userid':userid},{'appointment.$':1},async function(err,found){
+	if(err){return next(err)}
+	if(!found)res.json("SHIT");
+	timex1=found.appointment[0].time;
+	console.log(timex1);
 	});
-	// let x = Staff.aggregate({_id:staffid,'appointment.userid':userid},{_id:0,'appointment.userid':1},{sort:{'appointment.time':1}},function(err,resx){
+
+	await Staff.find({_id:staffid},{_id:0,'appointment.time':1},function(err,appointments){
+	if(err){return next(err)}
+	let data = appointments.map(function(time){
+	return {
+					time_:time.appointment
+			}
+	});
+
+				
 		
-		
-	// }).fetch(function(err,count){
-	// 	res.json(count);
-	// });
-
-	// Staff.aggregate([{$group:{_id:0,'appointment.userid':1}},{$sort:{'appointment.time':1}}],function(err,app){
-	// 	if(err){return next(err)}
-	// 	res.json(app);
-	// });
-
-
+	data_ = (JSON.stringify(data[0].time_)).replace(/[/{}\"time\":]/g, '');
+	cleaned = data_.replace(/[\[\]']/g,'');
+	let sorted = cleaned.toString().split(',').map(Number).sort(function(a,b){return a-b});
+	finaldata=sorted.toString().split(',')
+	pos = finaldata.indexOf(timex1.toString())+1;
+	res.json({pos});
+	});
+	
+	
+	
+}
+catch(error){
+	console.log("ERR",error);
+}
 
 	
 }

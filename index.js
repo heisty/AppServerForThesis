@@ -3,6 +3,7 @@ const morgan = require('morgan');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 var router = require('./services/router');
+const cors = require('cors');
 
 var app = express();
 
@@ -11,6 +12,7 @@ mongoose.connect('mongodb://localhost/jnlbha');
 
 
 app.use(morgan('combined'));
+app.use(cors());
 app.use(bodyParser.json());
 app.use('/v1',router);
 
