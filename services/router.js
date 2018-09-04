@@ -125,6 +125,28 @@ router.route('/getcat')
 	.post(Product.getCat);
 router.route('/getservicetype')
 	.post(Product.getServiceType);
+router.route('/addproduct')
+	.post(Product.addProduct);
+router.route('/getproduct')
+	.post(Product.getProduct);
+router.route('/getinventory')
+	.post(Product.getInventory);
+
+
+router.route('/updatecat')
+	.post(Product.updateCat);
+
+router.route('/updateproduct')
+	.post(Product.updateProduct);
+
+router.route('/deletecat')
+	.post(Product.deleteCat);
+
+router.route('/deleteproduct')
+	.post(Product.deleteProduct);
+
+router.route('/deleteservice')
+	.post(Product.deleteService);
 
 
 // change pass

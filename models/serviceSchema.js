@@ -1,30 +1,13 @@
 const mongoose = require('mongoose');
 
 const serviceSchema = mongoose.Schema({
-	title: {type: String},
-	description: {type: String},
+	
+	servicename: {type: String},
+	servicedescription: {type: String},
 	duration: {type: Number},
-	types: [{
-			title: {type: String},
-			description: {type: String},
-			price: {type: String},
-			available: {type: Boolean},
-			featured: {type: Boolean},
-			servicetype: [
-				{s_type: {type:String}}
-			]
-		}],
-	category: [
-		{
-			cat:{type: String},
-		}
-	],
-	featured: {type: Boolean},
-	available: {type: Boolean},
-	type: [
-		{servicetype: {type: String}}
-	],
-	price: {type: Number}
+	price: {type: Number},
+	category: {type: String},
+	type: {type: String}
 
 });
 

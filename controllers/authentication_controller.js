@@ -147,37 +147,12 @@ exports.services = function(req,res,next){
 }
 
 exports.addservices = function(req,res,next){
-	var {title,description,cat,featured,available,servicetype,price,t_title,t_description,t_price,t_available,t_featured,t_servicetype} = req.body;
-	var service = new Service({
-		title: title,
-		description: description,
-		types: [{
-			title: t_title,
-			description: t_description,
-			price: t_price,
-			available: t_available,
-			featured: t_featured,
-			servicetype: [
-				{type: t_servicetype}
-			]
-		}],
-		category: [
-			{
-				cat: "All",
-			},
-			{
-				
-				cat:cat
-			}
-		],
-		featured: featured,
-		available: available,
-		type: [
-			{servicetype: servicetype}
-		],
-		price: price,
+	
+	let service = new Service({
+		...req.body,
+		type: "service",
+	})
 
-	});
 	service.save(function(err){
 		if(err){return next(err)}
 		res.json({respond: 'Yosh'});
@@ -185,18 +160,19 @@ exports.addservices = function(req,res,next){
 }
 
 exports.updateservices = function(req,res,next){
-	let { serviceid,title,description,price } = req.body;
+	let {
+		_id
+	} = req.body;
 
 	let service = new Service({
-		title: title,
-		description: description,
-		price: price
+		...req.body,
+		type: "service"
 	});
 
 	let serviceObject = service.toObject();
 	delete serviceObject._id;
 
-	Service.update({_id:serviceid},serviceObject,function(err){
+	Service.update({_id:_id},serviceObject,function(err){
 		if(err){return next(err)}
 		return res.json("Updated");
 	})
@@ -264,32 +240,15 @@ exports.customersignup = function(req,res,next){
 
 
 }
+
 exports.signup = function(req,res,next){
 
-	var {
+	let {
 		username,
-		password,
-		email,
-		avatarLink,
-		firstname,
-		lastname,
-		contactnumber,
-		description,
-		available,
-		day,
-		m_time,
-		m_endTime,
-		a_time,
-		a_endTime,
-		n_time,
-		n_endTime,
-		address,
-		lat,
-		long,
-		skill
+		password
 	} = req.body;
 
-	console.log(username,password);
+	console.log(req.body);
 
 	if(!username || !password){
 		return res.status(422).json({error: 'Please provide'});
@@ -298,50 +257,96 @@ exports.signup = function(req,res,next){
 		if(err) {return next(err);}
 		if(existingUser) {return res.status(422).json({error: 'taken'});}
 
-		var user = new User({
-			username: username,
-			email:email,
-			avatarLink: avatarLink,
-			password: password,
-			firstname: firstname,
-			lastname: lastname,
-			contactnumber: contactnumber,
-			description: description,
-			address: address,
-			available:available,
-			schedule: [
-				{
-					day: day,
-					
-					morning: {
-						_time:m_time,
-						_endTime:m_endTime,
-					},
-					afternoon: {
-						_time:a_time,
-						_endTime:a_endTime,
-					},
-					night: {
-						_time:n_time,
-						_endTime:n_endTime,
-					}
-				}
-			],
-			location: {
-				latitude:lat,
-				longitude:long
-			},
-			skills: [
-				{
-					title:skill
-				}
-			]
+		let user = new User({
+			...req.body
 		});
 
 		user.save(function(err){
 			if(err){return next(err)}
-			res.json({user_id: user._id,token: tokenForUser(user)});
+			res.json("OK");
 		})
-
 	})
+
 }
+
+// exports.signup = function(req,res,next){
+
+// 	var {
+// 		username,
+// 		password,
+// 		email,
+// 		avatarLink,
+// 		firstname,
+// 		lastname,
+// 		contactnumber,
+// 		description,
+// 		available,
+// 		day,
+// 		m_time,
+// 		m_endTime,
+// 		a_time,
+// 		a_endTime,
+// 		n_time,
+// 		n_endTime,
+// 		address,
+// 		lat,
+// 		long,
+// 		skill
+// 	} = req.body;
+
+// 	console.log(username,password);
+
+// 	if(!username || !password){
+// 		return res.status(422).json({error: 'Please provide'});
+// 	}
+// 	User.findOne({username: username}, function(err,existingUser){
+// 		if(err) {return next(err);}
+// 		if(existingUser) {return res.status(422).json({error: 'taken'});}
+
+// 		var user = new User({
+// 			username: username,
+// 			email:email,
+// 			avatarLink: avatarLink,
+// 			password: password,
+// 			firstname: firstname,
+// 			lastname: lastname,
+// 			contactnumber: contactnumber,
+// 			description: description,
+// 			address: address,
+// 			available:available,
+// 			schedule: [
+// 				{
+// 					day: day,
+					
+// 					morning: {
+// 						_time:m_time,
+// 						_endTime:m_endTime,
+// 					},
+// 					afternoon: {
+// 						_time:a_time,
+// 						_endTime:a_endTime,
+// 					},
+// 					night: {
+// 						_time:n_time,
+// 						_endTime:n_endTime,
+// 					}
+// 				}
+// 			],
+// 			location: {
+// 				latitude:lat,
+// 				longitude:long
+// 			},
+// 			skills: [
+// 				{
+// 					title:skill
+// 				}
+// 			]
+// 		});
+
+// 		user.save(function(err){
+// 			if(err){return next(err)}
+// 			res.json({user_id: user._id,token: tokenForUser(user)});
+// 		})
+
+// 	})
+// }

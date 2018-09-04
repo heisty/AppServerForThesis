@@ -8,9 +8,14 @@ const staffSchema = mongoose.Schema({
 	avatarlink: {type: String},
 	firstname: {type: String},
 	lastname: {type: String},
-	contactnumber: {type: String},
+	contact: {type: String},
 	description: {type: String},
-	address: {type: String},
+	address: [{
+			street:{type:String},
+			brgy: {type: String},
+			munc: {type: String},
+			city: {type: String}
+	}],
 	available: {type: Boolean},
 
 	schedule: [
@@ -56,10 +61,11 @@ const staffSchema = mongoose.Schema({
 		}
 	,
 	skills: 
-		{
-			title:{type: String}
-		}
-	
+		[
+				{
+					label:{type: String}
+				}
+		]
 });
 
 staffSchema.methods.comparePassword = function(candidatePassword,callback){
