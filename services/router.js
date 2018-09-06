@@ -173,6 +173,8 @@ router.route('/getmyapp')
 	.post(Schedule.getMyAppointment);
 router.route('/mypos')
 	.post(Schedule.myPositionOnQueue);
+router.route('/setschedule')
+	.post(Schedule.setSchedule);
 	
 // XXX
 // function protected(req,res,next){

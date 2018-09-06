@@ -194,3 +194,246 @@ exports.getMyAppointment = function(req,res,next){
 
 }
 
+
+
+
+exports.setSchedule = async function(req,res,next){
+	let {
+		_id,
+		mode,
+		whole,
+		day,
+	} = req.body;
+
+	let {
+
+		sday,
+		ams,
+		ame,
+		pms,
+		pme,
+
+
+	} = req.body;
+
+
+	let staff = new Staff({
+			schedule: [
+
+				{
+					morning: {
+						_time:ams,
+						_endTime:ame,
+					},
+					afternoon: {
+						_time:pms,
+						_endTime:pme,
+					},
+					day:"Monday"
+
+				},
+				{
+					morning: {
+						_time:ams,
+						_endTime:ame,
+					},
+					afternoon: {
+						_time:pms,
+						_endTime:pme,
+					},
+					day:"Tuesday"
+
+				},
+				{
+					morning: {
+						_time:ams,
+						_endTime:ame,
+					},
+					afternoon: {
+						_time:pms,
+						_endTime:pme,
+					},
+					day:"Wednesday"
+
+				},
+				{
+					morning: {
+						_time:ams,
+						_endTime:ame,
+					},
+					afternoon: {
+						_time:pms,
+						_endTime:pme,
+					},
+					day:"Thursday"
+
+				},
+				{
+					morning: {
+						_time:ams,
+						_endTime:ame,
+					},
+					afternoon: {
+						_time:pms,
+						_endTime:pme,
+					},
+					day:"Friday"
+
+				},
+				{
+					morning: {
+						_time:ams,
+						_endTime:ame,
+					},
+					afternoon: {
+						_time:pms,
+						_endTime:pme,
+					},
+					day:"Saturday"
+
+				},
+				{
+					morning: {
+						_time:ams,
+						_endTime:ame,
+					},
+					afternoon: {
+						_time:pms,
+						_endTime:pme,
+					},
+					day:"Sunday"
+
+				}
+
+			]
+		});
+
+	let staffObj  = staff.toObject();
+	delete staffObj._id;
+
+	
+
+	//res.json(isUpdate);
+
+
+	if(mode==="all" && whole==="emp"){
+		console.log('ok full auto');
+
+		
+		
+
+		Staff.update({},staffObj,{multi:true},function(err){
+			if(err){return next(err)}
+			
+		})
+		
+
+	}
+
+	if(mode==="manual" && whole==="emp"){
+
+		console.log('ok semi manual');
+
+		//delete the day for all
+
+		// Staff.update({schedule},{$pull: {'staffs.schedule.$.day':sday}},function(err){
+
+		// 	if(err){return next(err)}
+		// 	console.log("DONE DONE");
+
+		// })
+
+		let sched = new Staff({
+
+			schedule: [
+				{
+					morning: {
+
+						_time:ams,
+						_endTime:ame
+
+					},
+					afternoon: {
+						_time:pms,
+						_endTime:pme
+					},
+					day:sday
+				}
+			]
+
+		});
+
+		let schedObj = sched.toObject();
+		delete schedObj._id;
+
+		
+
+		Staff.update({},{$pull: {'schedule':{'day':sday}}},{multi:true},function(err,sched){
+			if(err){return next(err)}	
+		});
+
+		await Staff.update({},{$addToSet: schedObj},{multi:true},function(err){
+			if(err){return next(err)}
+			res.json("ok");
+		});
+
+		
+
+
+	}
+
+	if(mode==="all" && whole==="manual"){
+		console.log("ALL ANUAL")
+
+		Staff.update({_id},staffObj,{multi:true},function(err){
+			if(err){return next(err)}
+			console.log("ALL ANUAL")
+		})
+
+
+
+	}
+
+	if(mode==="manual" && whole==="manual"){
+
+		console.log("Engaging Full Manual");
+
+		Staff.update({_id},{$pull: {'schedule':{'day':sday}}},function(err,sched){
+			if(err){return next(err)}	
+			console.log(sched)
+		});
+
+		let schedmanual = new Staff({
+			schedule: [
+				{
+					morning: {
+
+						_time:ams,
+						_endTime:ame
+
+					},
+					afternoon: {
+						_time:pms,
+						_endTime:pme
+					},
+					day:sday
+				}
+			]
+		});
+
+		let smObj = schedmanual.toObject();
+		delete smObj._id;
+
+
+		await Staff.update({_id},{$addToSet: smObj},function(err){
+			if(err){return console.log(err); next(err)}
+			res.json("ok");
+		}) 
+
+	}
+
+
+
+
+}
+
