@@ -1,25 +1,25 @@
 const Staff = require('../models/staffschema');
 exports.getScheduledEmployees = function(req,res,next){
 	let {
-		day,time,suffix
+		day,time,suffix,skill
 	} = req.body;
 
 	if(suffix==="AM"){
-		Staff.find({$and:[{'schedule.day':day},{'available':true},{'schedule.morning._time':{$lte:time}},{'schedule.morning._endTime':{$gt:time}}]},function(err,staff){
+		Staff.find({$and:[{'skills.label':skill},{'schedule.day':day},{'available':true},{'schedule.morning._time':{$lte:time}},{'schedule.morning._endTime':{$gt:time}}]},function(err,staff){
 		if(err){return next(err)}
 		return res.json({staff:staff});
 	});
 	}
 
 	if(suffix==="PM"){
-		Staff.find({$and:[{'schedule.day':day},{'available':true},{'schedule.afternoon._time':{$lte:time}},{'schedule.afternoon._endTime':{$gt:time}}]},function(err,staff){
+		Staff.find({$and:[{'skills.label':skill},{'schedule.day':day},{'available':true},{'schedule.afternoon._time':{$lte:time}},{'schedule.afternoon._endTime':{$gt:time}}]},function(err,staff){
 		if(err){return next(err)}
 		return res.json({staff:staff});
 	});
 	}
 
 	if(suffix==="NM"){
-		Staff.find({$and:[{'schedule.day':day},{'available':true},{'schedule.night._time':{$lte:time}},{'schedule.night._endTime':{$gt:time}}]},function(err,staff){
+		Staff.find({$and:[{'skills.label':skill},{'schedule.day':day},{'available':true},{'schedule.night._time':{$lte:time}},{'schedule.night._endTime':{$gt:time}}]},function(err,staff){
 		if(err){return next(err)}
 		return res.json({staff:staff});
 	});
@@ -29,11 +29,11 @@ exports.getScheduledEmployees = function(req,res,next){
 
 exports.getLaterScheduled = function(req,res,next){
 	let {
-		day,time,suffix
+		day,time,suffix,skill
 	} = req.body;
 
 	if(suffix==="AM"){
-		Staff.find({$and:[{'schedule.day':day},{$or:[
+		Staff.find({$and:[{'skills.label':skill},{'schedule.day':day},{$or:[
 
 			{'schedule.morning._time':{$gte:time}},{'schedule.morning._endTime':{$lte:time}}]}
 
@@ -44,7 +44,7 @@ exports.getLaterScheduled = function(req,res,next){
 	}
 
 	if(suffix==="PM"){
-		Staff.find({$and:[{$or:[
+		Staff.find({$and:[{'skills.label':skill},{$or:[
 
 			{'schedule.afternoon._time':{$gte:time}},{'schedule.afternoon._endTime':{$lte:time}}]}
 
@@ -55,7 +55,7 @@ exports.getLaterScheduled = function(req,res,next){
 	}
 
 	if(suffix==="NM"){
-		Staff.find({$and:[{$or:[
+		Staff.find({$and:[{'skills.label':skill},{$or:[
 
 			{'schedule.night._time':{$gte:time}},{'schedule.night._endTime':{$lte:time}}]}
 
@@ -70,10 +70,10 @@ exports.getLaterScheduled = function(req,res,next){
 
 exports.getNeverAvailable = function(req,res,next){
 	let {
-		day,time,suffix
+		day,time,suffix,skill
 	} = req.body;
 
-	Staff.find({$and: [{$or:[{'schedule.day':{$ne:day}},{'available':false}]}]},function(err,staff){
+	Staff.find({$and: [{'skills.label':skill},{$or:[{'schedule.day':{$ne:day}},{'available':false}]}]},function(err,staff){
 		if(err){return next(err)}
 		res.json({staff:staff});
 	})
@@ -92,7 +92,7 @@ exports.setAppointment = function(req,res,next){
 		time,
 		duration,
 		suffix,
-		position,
+		
 	} = req.body;
 
 	let staff =  new Staff({
@@ -108,7 +108,7 @@ exports.setAppointment = function(req,res,next){
 				time:time,
 				duration:duration,
 				suffix:suffix,
-				position:position
+				
 			}
 		]
 	});
@@ -141,35 +141,59 @@ exports.checkAppointment = function(req,res,next){
 exports.myPositionOnQueue = async function(req,res,next){
 	let {
 
-		staffid,
+		
 		userid
 	} = req.body;
 	let timex1;
+	let staffid;
 
 	try{
+
+
+	await Staff.findOne({'appointment.userid':userid},function(err,staff){
+		if(err){return next(err)}
+
+		staffid=staff._id;
+
+	})
+
 	await Staff.findOne({_id:staffid,'appointment.userid':userid},{'appointment.$':1},async function(err,found){
 	if(err){return next(err)}
+	try{
 	if(!found)res.json("SHIT");
 	timex1=found.appointment[0].time;
 	console.log(timex1);
+	}
+	catch(error){}
 	});
 
 	await Staff.find({_id:staffid},{_id:0,'appointment.time':1},function(err,appointments){
 	if(err){return next(err)}
+
+	try{
+
 	let data = appointments.map(function(time){
 	return {
 					time_:time.appointment
 			}
 	});
 
-				
-		
+	let data_n = data[0].time_.length;
+	// data.forEach(function(entry){
+	// 	data_n=entry.time_
+	// })		
+	
 	data_ = (JSON.stringify(data[0].time_)).replace(/[/{}\"time\":]/g, '');
 	cleaned = data_.replace(/[\[\]']/g,'');
 	let sorted = cleaned.toString().split(',').map(Number).sort(function(a,b){return a-b});
 	finaldata=sorted.toString().split(',')
 	pos = finaldata.indexOf(timex1.toString())+1;
-	res.json({pos});
+	res.json({pos,data_n,data});
+
+}
+catch(error){}
+
+
 	});
 	
 	
@@ -435,5 +459,24 @@ exports.setSchedule = async function(req,res,next){
 
 
 
+}
+
+
+exports.resetSchedule = function(req,res,next){
+
+
+	let pnon = new Staff({
+		schedule: [
+
+		]
+	});
+
+	let pnonObj = pnon.toObject();
+	delete pnonObj._id;
+
+	Staff.update({},pnonObj,{multi:true},function(err){
+		if(err){return next(err)}
+		res.json("ok");
+	})
 }
 

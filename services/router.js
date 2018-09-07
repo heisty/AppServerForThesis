@@ -175,6 +175,14 @@ router.route('/mypos')
 	.post(Schedule.myPositionOnQueue);
 router.route('/setschedule')
 	.post(Schedule.setSchedule);
+router.route('/resetschedule')
+	.post(Schedule.resetSchedule);
+
+
+// customer shit
+
+router.route('/mba')
+	.post(Product.myBookedAppointments);
 	
 // XXX
 // function protected(req,res,next){

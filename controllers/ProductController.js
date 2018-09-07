@@ -1,6 +1,7 @@
 const Cat = require('../models/Categories');
 const Service = require('../models/serviceSchema');
 const Product = require('../models/Product');
+const Staff  = require('../models/staffschema');
 
 exports.addCat=function(req,res,next){
 	var cat = new Cat({
@@ -197,5 +198,20 @@ exports.deleteService = function(req,res,next){
 	Service.deleteOne({_id:_id},function(err){
 		if(err){return next(err)}
 		res.json("ok");
+	})
+}
+
+
+
+// customer shit
+
+exports.myBookedAppointments = function(req,res,next){
+	let {
+		userid
+	} = req.body;
+
+	Staff.find({'appointment.userid':userid},function(err,booked){
+		if(err){return next(err)}
+		res.json({booked});
 	})
 }

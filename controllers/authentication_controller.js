@@ -141,9 +141,19 @@ exports.services = function(req,res,next){
 	let {
 		category
 	} = req.body;
-	Service.find({'category.cat':category},function(err,service){
+
+	console.log(category);
+	
+	if(!category || category==="All"){
+		Service.find({},function(err,service){
 		res.send({service});
 	});
+	}
+	if(category && category!=="All"){
+		Service.find({category},function(err,service){
+		res.send({service});
+	});
+	}
 }
 
 exports.addservices = function(req,res,next){
@@ -258,7 +268,8 @@ exports.signup = function(req,res,next){
 		if(existingUser) {return res.status(422).json({error: 'taken'});}
 
 		let user = new User({
-			...req.body
+			...req.body,
+			available:false,
 		});
 
 		user.save(function(err){
