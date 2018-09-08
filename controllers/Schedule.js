@@ -1,8 +1,12 @@
 const Staff = require('../models/staffschema');
 exports.getScheduledEmployees = function(req,res,next){
+
+
 	let {
 		day,time,suffix,skill
 	} = req.body;
+
+	console.log(suffix);
 
 	if(suffix==="AM"){
 		Staff.find({$and:[{'skills.label':skill},{'schedule.day':day},{'available':true},{'schedule.morning._time':{$lte:time}},{'schedule.morning._endTime':{$gt:time}}]},function(err,staff){
@@ -83,9 +87,11 @@ exports.setAppointment = function(req,res,next){
 	let {
 		userid,
 		username,
-		staffid,
 		serviceid,
 		servicename,
+		servicetype,
+		staffid,
+		staffname,
 		date,
 		status,
 		accepted,
@@ -102,6 +108,9 @@ exports.setAppointment = function(req,res,next){
 				username:username,
 				serviceid:serviceid,
 				servicename:servicename,
+				servicetype:servicetype,
+				staffid:staffid,
+				staffname:staffname,
 				date:date,
 				status:status,
 				accepted:accepted,
@@ -152,8 +161,12 @@ exports.myPositionOnQueue = async function(req,res,next){
 
 	await Staff.findOne({'appointment.userid':userid},function(err,staff){
 		if(err){return next(err)}
-
+		try{
 		staffid=staff._id;
+		}
+		catch(error){
+			console.log("NO ID");
+		}
 
 	})
 
@@ -164,7 +177,9 @@ exports.myPositionOnQueue = async function(req,res,next){
 	timex1=found.appointment[0].time;
 	console.log(timex1);
 	}
-	catch(error){}
+	catch(error){
+		console.log("NO FOUND TIMEZ")
+	}
 	});
 
 	await Staff.find({_id:staffid},{_id:0,'appointment.time':1},function(err,appointments){
@@ -480,3 +495,43 @@ exports.resetSchedule = function(req,res,next){
 	})
 }
 
+
+exports.cancelOrder = function(req,res,next){
+	let {
+		staffid,
+		appid
+	} = req.body;
+
+	Staff.update({_id:staffid},{$pull: {'appointment':{'_id':appid}}},function(err){
+		if(err){return next(err)}
+		res.json("ok");
+	})
+}
+
+exports.updateOrder = function(req,res,next){
+	let {
+		staffid,
+		appid,
+		time,
+		suffix,
+		date
+	} = req.body;
+
+	Staff.update({_id:staffid,'appointment.0._id':appid},{$set: {'appointment.0.time':time,'appointment.0.suffix':suffix,'appointment.0.date':date}},function(err){
+		if(err){return next(err)}
+		res.json("ok");
+	})
+
+	// let sched = new Staff({
+	// 	time,
+	// 	suffix
+	// })
+
+	// let sObj = sched.toObject();
+	// delete sObj._id;
+
+	// Staff.update({_id:staffid,'appointment._id':appid},sObj,function(err){
+	// 	if(err){return next(err)}
+	// 	res.json("done");
+	// })
+}

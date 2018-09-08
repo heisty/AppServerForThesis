@@ -177,7 +177,10 @@ router.route('/setschedule')
 	.post(Schedule.setSchedule);
 router.route('/resetschedule')
 	.post(Schedule.resetSchedule);
-
+router.route('/cancelorder')
+	.post(Schedule.cancelOrder);
+router.route('/updateorder')
+	.post(Schedule.updateOrder);
 
 // customer shit
 

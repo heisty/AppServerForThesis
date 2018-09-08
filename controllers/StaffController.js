@@ -17,11 +17,7 @@ exports.addSkills = function(req,res,next){
 	var {staffid,skill} = req.body;
 
 	var staff = new Staff({
-		skills: [
-			{
-				title: skill
-			}
-		]
+		skills:skill
 	});
 
 	var staffObject = staff.toObject();
