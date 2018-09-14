@@ -9,6 +9,7 @@ const CustomerInfoController = require('../controllers/CustomerInfoController');
 const TransactionController = require('../controllers/TransactionController');
 var requireAuth = passport.authenticate('jwt',{session: false});
 var requireLogin = passport.authenticate('local',{session: false});
+const Payment = require('../controllers/Payment');
 const Verify = require('../controllers/Verify');
 
 // Auth 
@@ -48,8 +49,8 @@ router.route('/updateservices')
 	.post(AuthenticationController.updateservices);
 router.route('/savecustomerservices')
 	.post(CustomerInfoController.saveCustomerServices);
-router.route('/savecustomerlocation')
-	.post(CustomerInfoController.saveCustomerLocation);
+router.route('/updatecustomer')
+	.post(CustomerInfoController.updateCustomerProfile);
 router.route('/saveadminreport')
 	.post(TransactionController.saveAdminReport);
 router.route('/savetransaction')
@@ -107,12 +108,8 @@ router.route('/deleteactiveavail')
 
 // Transactions
 
-router.route('/getpayments')
-	.post(TransactionController.getPayments);
-
-router.route('/getsppayments')
-	.post(TransactionController.getSpecificPayments);
-
+router.route('/gww')
+	.post(Payment.getWorldwideTransaction);
 
 // PRODs
 
@@ -181,11 +178,59 @@ router.route('/cancelorder')
 	.post(Schedule.cancelOrder);
 router.route('/updateorder')
 	.post(Schedule.updateOrder);
+router.route('/acceptap')
+	.post(Schedule.acceptAp);
+router.route('/setcompleteap')
+	.post(Schedule.setCompleteAp);
 
 // customer shit
 
 router.route('/mba')
 	.post(Product.myBookedAppointments);
+
+
+// get recents
+
+router.route('/getcustrecent')
+	.post(Schedule.getCustRecent);
+
+router.route('/getstaffrecent')
+	.post(Schedule.getStaffRecent);
+
+router.route('/getalltransaction')
+	.post(Schedule.getAllTransaction);
+
+router.route('/numberofcustomers')
+	.post(Schedule.numberOfCustomers);
+
+router.route('/rating')
+	.post(Schedule.rating);
+
+
+// admin powers
+
+router.route('/getcustomerlist')
+	.post(CustomerInfoController.getCustomerList);
+		
+router.route('/makepayment')
+			.post(Payment.makePayment);
+
+
+router.route('/getpayments')
+	.post(Payment.getPayments);
+
+router.route('/deletepayment')
+	.post(Payment.deletePayment);
+
+router.route('/getsppayments')
+	.post(Payment.getSpecificPayments);
+
+router.route('/getsales')
+	.post(Payment.getSales);	
+
+	
+
+
 	
 // XXX
 // function protected(req,res,next){

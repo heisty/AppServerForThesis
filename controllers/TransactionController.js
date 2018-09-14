@@ -142,23 +142,3 @@ catch(error){
 	
 }
 
-exports.getPayments = function(req,res,next){
-	console.log("RECEIVED");
-	Transaction.find({$or:[{remit:false},{paid:false}]},function(err,payments){
-		if(err){return next(err)}
-		res.json({payments:payments});
-
-	})
-}
-
-exports.getSpecificPayments = function(req,res,next){
-	console.log("RECEIVED");
-	let {
-		userid
-	} = req.body;
-	Transaction.find({$or:[{remit:false},{paid:false}],userid:userid},function(err,payments){
-		if(err){return next(err)}
-		res.json({payments:payments});
-
-	})
-}

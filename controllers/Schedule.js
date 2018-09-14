@@ -1,4 +1,8 @@
 const Staff = require('../models/staffschema');
+const Transaction = require('../models/transactionSchema');
+const Customer = require('../models/customerschema');
+const Service = require('../models/serviceSchema');
+const moment = require('moment-timezone');
 exports.getScheduledEmployees = function(req,res,next){
 
 
@@ -6,11 +10,14 @@ exports.getScheduledEmployees = function(req,res,next){
 		day,time,suffix,skill
 	} = req.body;
 
+	console.log(day,time,suffix,skill);
+
 	console.log(suffix);
 
 	if(suffix==="AM"){
 		Staff.find({$and:[{'skills.label':skill},{'schedule.day':day},{'available':true},{'schedule.morning._time':{$lte:time}},{'schedule.morning._endTime':{$gt:time}}]},function(err,staff){
 		if(err){return next(err)}
+		console.log(staff);
 		return res.json({staff:staff});
 	});
 	}
@@ -18,6 +25,7 @@ exports.getScheduledEmployees = function(req,res,next){
 	if(suffix==="PM"){
 		Staff.find({$and:[{'skills.label':skill},{'schedule.day':day},{'available':true},{'schedule.afternoon._time':{$lte:time}},{'schedule.afternoon._endTime':{$gt:time}}]},function(err,staff){
 		if(err){return next(err)}
+		console.log(staff);
 		return res.json({staff:staff});
 	});
 	}
@@ -86,7 +94,7 @@ exports.getNeverAvailable = function(req,res,next){
 exports.setAppointment = function(req,res,next){
 	let {
 		userid,
-		username,
+		customer,
 		serviceid,
 		servicename,
 		servicetype,
@@ -96,25 +104,36 @@ exports.setAppointment = function(req,res,next){
 		status,
 		accepted,
 		time,
+		price,
 		duration,
 		suffix,
 		
 	} = req.body;
 
+	let date1 = new Date(date);
+	let m = date1.getMonth()+1;
+	if(m<10)m=`0${m}`;
+	let d = date1.getDate();
+	if(d<10)d=`0${d}`;
+	let y = date1.getFullYear();
+
+	let date_ = `${y}-${m}-${d}`;
+
 	let staff =  new Staff({
 		appointment: [
 			{
 				userid:userid,
-				username:username,
+				customer:customer,
 				serviceid:serviceid,
 				servicename:servicename,
 				servicetype:servicetype,
 				staffid:staffid,
 				staffname:staffname,
-				date:date,
+				date:date_,
 				status:status,
 				accepted:accepted,
 				time:time,
+				price:price,
 				duration:duration,
 				suffix:suffix,
 				
@@ -134,15 +153,18 @@ exports.setAppointment = function(req,res,next){
 exports.checkAppointment = function(req,res,next){
 	let {
 
-		day,
+		staffid,
+		date,
 		time,
 		suffix,
 	} = req.body;
 
-	Staff.count({$and:[{'appointment.time':{$lte:time}},{'appointment.duration':{$gt:time}},{'appointment.suffix':suffix}]},function(err,found){
+	console.log(staffid);
+
+	Staff.count({$and:[{_id:staffid,'appointment.date':date,'appointment.time':{$lte:time}},{'appointment.duration':{$gt:time}},{'appointment.suffix':suffix}]},function(err,found){
 		if(err){return next(err)}
-		if(!found)res.json({found:0});
-		if(found)res.json({found:found});
+		console.log(found);
+		res.json({found});
 	})
 }
 
@@ -170,46 +192,116 @@ exports.myPositionOnQueue = async function(req,res,next){
 
 	})
 
-	await Staff.findOne({_id:staffid,'appointment.userid':userid},{'appointment.$':1},async function(err,found){
+	await Staff.findOne({_id:staffid,'appointment.userid':userid,'appointment.accepted':'true'},{'appointment.$':1},async function(err,found){
 	if(err){return next(err)}
 	try{
-	if(!found)res.json("SHIT");
+	
 	timex1=found.appointment[0].time;
-	console.log(timex1);
+	console.log("TIMEX",timex1);
 	}
 	catch(error){
 		console.log("NO FOUND TIMEZ")
 	}
 	});
 
-	await Staff.find({_id:staffid},{_id:0,'appointment.time':1},function(err,appointments){
-	if(err){return next(err)}
 
-	try{
 
-	let data = appointments.map(function(time){
-	return {
-					time_:time.appointment
-			}
-	});
+	await Staff.aggregate([
+			{$unwind: '$appointment'},
+			{$match: {'appointment.accepted':{$eq:'true'}}},
+			{$project: {_id:0,'appointment.time':1}}
+		],function(err,resulte){
 
-	let data_n = data[0].time_.length;
+		try{
+			if(err){return next(err)}
+			//res.json(resulte);
+
+
+				let time= [];
+				let data = [];
+
+				resulte.forEach(function(entry){
+					time.push(entry.appointment);
+				})
+				let pushit = {
+					time_:time
+				}
+				data.push(pushit);
+
+		
+
+
+	 	let data_n = data[0].time_.length;
+	 	
 	// data.forEach(function(entry){
 	// 	data_n=entry.time_
 	// })		
 	
-	data_ = (JSON.stringify(data[0].time_)).replace(/[/{}\"time\":]/g, '');
-	cleaned = data_.replace(/[\[\]']/g,'');
-	let sorted = cleaned.toString().split(',').map(Number).sort(function(a,b){return a-b});
-	finaldata=sorted.toString().split(',')
-	pos = finaldata.indexOf(timex1.toString())+1;
-	res.json({pos,data_n,data});
+			data_ = (JSON.stringify(data[0].time_)).replace(/[/{}\"time\":]/g, '');
+			cleaned = data_.replace(/[\[\]']/g,'');
+			let sorted = cleaned.toString().split(',').map(Number).sort(function(a,b){return a-b});
+			finaldata=sorted.toString().split(',')
+			pos = finaldata.indexOf(timex1.toString())+1;
+			res.json({pos,data_n,data});
+			
+	
+		}
+		catch(error){}
 
-}
-catch(error){}
 
 
-	});
+
+		})
+
+//BACK SAGE++
+// 	await Staff.find({_id:staffid,"appointment.accepted":"true"},{'_id':0,'appointment.time':1},async function(err,appointments){
+// 	if(err){return next(err)}
+
+// 	try{
+
+// 	let data = appointments.map(function(time){
+// 	return {
+// 					time_:time.appointment
+// 			}
+// 	});
+
+// 	// let data = [];
+// 	// let xd = await appointments.map(function(time){
+// 	// 	let yz = {
+// 	// 		time_:time.appointment.time
+// 	// 	}
+
+// 	// 	time.appointment.map(function(item){
+// 	// 		if(item.accepted==="true"){
+// 	// 			return {
+// 	// 				time_:item.time
+// 	// 			}
+// 	// 		}
+// 	// 	})
+		
+		
+// 	// });
+
+
+// 	 //res.json(data);
+
+// 	let data_n = data[0].time_.length;
+// 	// data.forEach(function(entry){
+// 	// 	data_n=entry.time_
+// 	// })		
+	
+// 	data_ = (JSON.stringify(data[0].time_)).replace(/[/{}\"time\":]/g, '');
+// 	cleaned = data_.replace(/[\[\]']/g,'');
+// 	let sorted = cleaned.toString().split(',').map(Number).sort(function(a,b){return a-b});
+// 	finaldata=sorted.toString().split(',')
+// 	pos = finaldata.indexOf(timex1.toString())+1;
+// 	//res.json({pos,data_n,data});
+// 	res.json({data_n,data});
+// }
+// catch(error){}
+
+
+// 	});
 	
 	
 	
@@ -221,15 +313,32 @@ catch(error){
 	
 }
 
-exports.getMyAppointment = function(req,res,next){
+exports.getMyAppointment = async function(req,res,next){
 	let {
 		staffid
 	} = req.body;
 
-	Staff.find({_id:staffid},{'_id':0,'appointment':1},function(err,app){
+	let appointment = [];
+
+	Staff.find({_id:staffid},{'_id':0,'appointment':1},function(err,appointment){
 		if(err){return next(err)}
-		res.json({appointment:app});
+		res.json({appointment});
 	});
+
+	// await Staff.find({_id:staffid},async function(err,app){
+	// 	if(err){return next(err)}
+	// 	await app.appointement.forEach(function(entry){
+	// 		if(entry.accepted===true){
+	// 			appointment.push(entry);
+	// 			console.log(entry);
+	// 		}
+	// 	})
+
+	// })
+
+	
+
+
 
 }
 
@@ -535,3 +644,235 @@ exports.updateOrder = function(req,res,next){
 	// 	res.json("done");
 	// })
 }
+
+
+exports.acceptAp = function(req,res,next) {
+	let {
+
+		staffid,
+		appid,
+
+	} = req.body;
+
+	console.log(staffid,appid);
+
+	Staff.update({_id:staffid,'appointment._id':appid},{$set: {'appointment.$.accepted':'true'}},function(err){
+		if(err){return next(err)}
+		res.json("accepted");
+	})
+}
+
+
+exports.setCompleteAp = function(req,res,next){
+	
+	console.log(req.body);
+	let dte = new Date();
+	let wk;
+	let wk_ = dte.getDate()/7;
+	console.log(wk_);
+	if(wk_<1){
+		wk=1;
+	}
+	if((wk_<2 || wk_===2) && wk_>1){
+		wk=2;
+	}
+	if((wk_<3||wk_===2) && wk_>2){
+		wk=3;
+	}
+	if((wk_<4 && wk_>3)||wk>=4){
+		wk=4;
+	}
+
+
+	let transaction = new Transaction({
+
+		...req.body,
+		rating: 0,
+		week: wk,
+		day: dte.getDate(),
+		month: dte.getMonth()+1,
+		year: dte.getFullYear()
+
+	
+	});
+
+	transaction.save(function(err){
+		if(err){return next(err)}
+		res.json("ok");
+	})
+
+
+	
+}
+
+
+// get specific recent appointments for customer
+
+exports.getCustRecent = function(req,res,next){
+	let {userid} = req.body;
+
+	Transaction.find({userid},function(err,staff){
+		if(err){return next(err)}
+		console.log(staff,userid);
+		res.json({staff});
+	})
+}
+
+exports.getStaffRecent = function(req,res,next){
+	let {staffid} = req.body;
+
+	Transaction.find({staffid:staffid},function(err,staff){
+		if(err){return next(err)}
+		
+		res.json({staff});
+
+	})
+}
+
+exports.getAllTransaction = function(req,res,next){
+	let {userid} = req.body;
+
+	Transaction.find({},function(err,staff){
+		if(err){return next(err)}
+		res.json({staff});
+	})
+}
+
+
+exports.numberOfCustomers = async function(req,res,next){
+	let {
+		date,
+		staffid,
+	} = req.body;
+
+	let earnings=0;
+	let custnum=0;
+
+	// console.log("INI",moment.tz(date,'Asia/Manila').toDate());
+	// console.log("END",date);
+	let date1 = new Date(date);
+	let m = date1.getMonth()+1;
+	if(m<10)m=`0${m}`;
+	let d = date1.getDate();
+	if(d<10)d=`0${d}`;
+	let y = date1.getFullYear();
+
+	let date_ = `${y}-${m}-${d}`;
+
+	let dataret = new Date(date_);
+	console.log("DRET",dataret);
+
+	// Transaction.find({staffid},{_id:0,date:1},function(err,datee){
+	// 	if(err){return next(err)}
+	// 	res.json(datee);
+	// })
+
+
+	await Transaction.countDocuments({staffid,date:dataret,status:'completed'},async function(err,custNum){
+		if(err){return next(err)}
+		custnum=custNum;
+
+		await Transaction.aggregate([
+				{
+					$match: {
+						staffid,
+						status: 'completed',
+						$week: {date: dataret}
+					}
+				}
+			],function(err,weekly){
+				console.log(weekly)
+			})
+
+		await Transaction.aggregate([
+
+		{$match: 
+			{
+				staffid,
+				status:'completed',
+				date: dataret,
+			}
+		},
+   		{
+     		$group: {
+     		_id:null,	
+       		price: { $sum: '$price'},
+    	 }
+   		}
+	],function(err,counter){
+		if(err){return next(err)}
+		counter.map(function(item){
+			earnings=item.price;
+			
+		})
+		res.json({custnum,earnings})
+	})
+	})
+
+	
+
+	
+
+
+
+}
+
+exports.rating = async function(req,res,next){
+	let {
+		staffid
+	} = req.body;
+
+	let custRated;
+	let rating;
+
+	await Transaction.aggregate([
+
+		{
+		$match: {
+			staffid,
+			status:'completed',
+			rating: {$gte: 0}
+		}
+		},
+		{$count: 'count'}
+
+		],async function(err,count){
+		if(err){return next(err)}
+		count.map(function(it){
+			custRated=it.count
+		})
+		
+		await Transaction.aggregate([
+	{
+		$match: {
+			staffid,
+			status:'completed',
+			rating: {$gte: 0}
+		}
+	},
+	{
+		$group: {
+			_id:null,
+			ratingPercentage: {$sum: '$rating'}
+		}
+	}],function(err,ratingPercentage){
+		if(err){return next(err)}
+		ratingPercentage.map(function(item){
+			rating=(item.ratingPercentage)/custRated;
+			
+			res.json({custRated,rating});
+		})
+	})
+
+	
+
+	});
+
+	
+
+
+
+}
+
+ 
+       

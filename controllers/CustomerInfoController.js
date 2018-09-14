@@ -2,6 +2,7 @@ const Customer = require('../models/customerschema');
 const ActiveService = require('../models/activeCustomerServices');
 const Avail = require('../models/availSchema');
 const Address = require('../models/CustomerAddress');
+const bcrypt = require('bcrypt-nodejs');
 
 exports.savecustomer = function(req,res,next){
 	var {
@@ -259,7 +260,47 @@ exports.getCustomerInfo = function(req,res,next){
 	} = req.body;
 	Customer.find({_id:userid},function(err,userinfo){
 		if(err){return next(err)}
-		
+		console.log(userinfo)
 		res.json({userinfo:userinfo});
+	})
+}
+
+exports.getCustomerList = function(req,res,next){
+	Customer.find({},function(err,customers){
+		if(err){return next(err)}
+		res.json({customers});
+	})
+}
+
+exports.updateCustomerProfile = async function(req,res,next){
+	let {
+		userid,username,password,firstname,lastname,email,contact,street,brgy,munc,city
+	} = req.body;
+
+	await bcrypt.genSalt(10, function(err,salt){
+		if(err){ return next(err)}
+		bcrypt.hash(password,salt,null,function(err,hash){
+			if(err) {return next(err)}
+			password=hash;
+			
+		});
+
+	});
+
+	let customer = new Customer({
+		username,password,firstname,lastname,email,contact,street,brgy,munc,city
+	});
+
+	let customerObject = customer.toObject();
+
+	
+
+
+
+	delete customerObject._id;
+
+	Customer.update({_id:userid},customerObject,function(err){
+		if(err){console.log(err,userid,password,firstname,lastname,email,contact);return next(err)}
+		res.json("Updated");
 	})
 }

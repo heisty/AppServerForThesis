@@ -39,17 +39,19 @@ const staffSchema = mongoose.Schema({
 	appointment: [
 		{
 			userid: {type: String},
-			username: {type: String},
+			customer: {type: String},
 			serviceid: {type: String},
 			servicename: {type: String},
 			servicetype: {type: String},
 			staffid: {type: String},
 			staffname: {type: String},
+			price: {type: Number},
 			day:{type:String},
 			date: {type: Date},
 			status: {type: String},
 			accepted: {type: String},
 			duration: {type: Number},
+			price: {type: Number},
 			time: {type: Number},
 			suffix: {type: String},
 			position: {type: Number}
@@ -96,5 +98,6 @@ staffSchema.pre('save',function(next){
 		next();
 	}
 });
+
 
 module.exports = mongoose.model('staff',staffSchema);

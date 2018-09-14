@@ -17,7 +17,7 @@ app.use(bodyParser.json());
 app.use('/v1',router);
 
 var PORT = process.env.PORT || 3000;
-var HOST = process.env.HOST || '192.168.30.3';
+var HOST = process.env.HOST || '127.0.0.1';
 
 console.log('Listening on ',PORT);
 app.listen(PORT,HOST);
@@ -33,4 +33,4 @@ app.listen(PORT,HOST);
 // var PORT = process.env.PORT || 3000;
 
 // console.log('Listening on ',PORT);
-// app.listen(PORT);
+// app.listen(PORT);  

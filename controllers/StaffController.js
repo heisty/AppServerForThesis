@@ -3,6 +3,7 @@ const Transaction = require('../models/activeCustomerServices');
 const Staff = require('../models/staffschema');
 const Admin = require('../models/adminSchema');
 const Order = require('../models/Orders');
+const bcrypt = require('bcrypt-nodejs');
 
 exports.getAppointment = function(req,res,next){
 	var {staffid} = req.body;
@@ -57,46 +58,40 @@ exports.retrieveStaffProfile = function(req,res,next){
 	})
 }
 
-exports.updateStaffProfile = function(req,res,next){
+exports.updateStaffProfile = async function(req,res,next){
 	let {
-		staffid,
-		username,
-		email,
-		password,
-		avatarLink,
-		firstname,
-		lastname,
-		contactnumber,
-		description,
-		address,
-		longitude,
-		latitude,
-		title,
+		staffid,username,password,firstname,lastname,email,contact,address,skills
 	} = req.body;
 
+	await bcrypt.genSalt(10, function(err,salt){
+		if(err){ return next(err)}
+		bcrypt.hash(password,salt,null,function(err,hash){
+			if(err) {return next(err)}
+			password=hash;
+			
+		});
+
+	});
+
 	let staff = new Staff({
-		username:username,
-		email:email,
-		password:password,
-		avatarLink:avatarLink,
-		firstname:firstname,
-		lastname:lastname,
-		contactnumber:contactnumber,
-		description:description,
-		address:address,
-		longitude:longitude,
-		latitude:latitude,
-		title:title
+		staffid,username,password,firstname,lastname,email,contact,address,skills
 	});
 
 	let staffObject = staff.toObject();
+
+	
+
+
+
 	delete staffObject._id;
 
 	Staff.update({_id:staffid},staffObject,function(err){
-		if(err){return next(err)}
+		if(err){console.log(err);return next(err)}
 		res.json("Updated");
 	})
 }
+
+
 
 exports.loginAdmin = function(req,res,next){
 	let {username,password} = req.body;
@@ -161,4 +156,13 @@ exports.orderService = function(req,res,next){
 	})
 }
 
+exports.deleteEmployee = function(req,res,next){
+	let {
+		staffid
+	} = req.body;
 
+	Staff.deleteOne({_id:staffid},function(err){
+		if(err){return next(err)}
+		res.json("ok")
+	});
+}    
