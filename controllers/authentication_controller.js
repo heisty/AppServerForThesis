@@ -5,6 +5,7 @@ const Service = require('../models/serviceSchema');
 const jwt = require('jwt-simple');
 const config = require('../config.js');
 const bcrypt = require('bcrypt-nodejs');
+const Admin  = require('../models/adminSchema');
 
 function tokenForUser(user){
 	var timestamp = new Date().getTime();
@@ -189,7 +190,7 @@ exports.updateservices = function(req,res,next){
 }
 exports.signin = function(req,res,next){
 	var user = req.user;
-	res.send({token: tokenForUser(user),userid: user._id,username: user.username});
+	res.send({token: tokenForUser(user),userid: user._id,username: user.username,staff:`${user.firstname} ${user.lastname}`});
 
 }
 exports.customersignin = function(req,res,next){
@@ -269,7 +270,7 @@ exports.signup = function(req,res,next){
 
 		let user = new User({
 			...req.body,
-			available:false,
+			available:true,
 		});
 
 		user.save(function(err){
@@ -361,3 +362,21 @@ exports.signup = function(req,res,next){
 
 // 	})
 // }
+
+
+exports.adminLogin = function(req,res,next){
+	let {
+		username,
+		password
+	} = req.body;
+
+	if(!username && !password){
+		res.json({type:0})
+	}
+	if(username && password){
+		Admin.countDocuments({username,password},function(err,result){
+			if(err){return next(err)}
+			res.json({count:result})
+		})
+	}
+}

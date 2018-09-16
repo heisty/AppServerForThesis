@@ -70,7 +70,8 @@ const staffSchema = mongoose.Schema({
 				{
 					label:{type: String}
 				}
-		]
+		],
+		salary: {type: Number}
 });
 
 staffSchema.methods.comparePassword = function(candidatePassword,callback){

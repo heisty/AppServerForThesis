@@ -73,19 +73,15 @@ exports.updateStaffProfile = async function(req,res,next){
 
 	});
 
-	let staff = new Staff({
-		staffid,username,password,firstname,lastname,email,contact,address,skills
-	});
+	// let staff = new Staff({
+	// 	staffid,username,password,firstname,lastname,email,contact,address,skills
+	// });
 
-	let staffObject = staff.toObject();
+	// let staffObject = staff.toObject();
 
-	
+	let stObj = {staffid,username,password,firstname,lastname,email,contact,address,skills}
 
-
-
-	delete staffObject._id;
-
-	Staff.update({_id:staffid},staffObject,function(err){
+	Staff.update({_id:staffid},{$set: stObj},function(err){
 		if(err){console.log(err);return next(err)}
 		res.json("Updated");
 	})

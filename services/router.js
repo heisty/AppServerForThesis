@@ -111,6 +111,14 @@ router.route('/deleteactiveavail')
 router.route('/gww')
 	.post(Payment.getWorldwideTransaction);
 
+router.route('/gd')
+	.post(Payment.getDaily);
+
+router.route('/gw')
+	.post(Payment.getWeekly);
+
+router.route('/gm')
+	.post(Payment.getMonthly);
 // PRODs
 
 
@@ -228,6 +236,23 @@ router.route('/getsppayments')
 router.route('/getsales')
 	.post(Payment.getSales);	
 
+
+router.route('/getinventorytransaction')
+	.post(Payment.getInventoryTransaction);
+
+router.route('/getpaymenttransaction')
+	.post(Payment.getPaymentTransaction);
+router.route('/realsales')
+	.post(Payment.realSales);
+router.route('/setsalary')
+	.post(Payment.setSalary);
+router.route('/getspinv')
+	.post(Payment.getSpecificInventory);
+router.route('/getused')
+	.post(Payment.getUsed);
+router.route('/admin')
+	.post(AuthenticationController.adminLogin);
+
 	
 
 
@@ -240,4 +265,4 @@ router.route('/getsales')
 // router.route('/protected')
 // 	.get(requireAuth,protected);
 
-module.exports = router;
+module.exports = router;   

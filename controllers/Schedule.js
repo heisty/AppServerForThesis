@@ -130,8 +130,8 @@ exports.setAppointment = function(req,res,next){
 				staffid:staffid,
 				staffname:staffname,
 				date:date_,
-				status:status,
-				accepted:accepted,
+				status:"pending",
+				accepted:false,
 				time:time,
 				price:price,
 				duration:duration,
@@ -365,10 +365,9 @@ exports.setSchedule = async function(req,res,next){
 	} = req.body;
 
 
-	let staff = new Staff({
-			schedule: [
+	let stObj = [
 
-				{
+		{
 					morning: {
 						_time:ams,
 						_endTime:ame,
@@ -453,11 +452,102 @@ exports.setSchedule = async function(req,res,next){
 
 				}
 
-			]
-		});
+	]
 
-	let staffObj  = staff.toObject();
-	delete staffObj._id;
+
+	// let staff = new Staff({
+	// 		schedule: [
+
+	// 			{
+	// 				morning: {
+	// 					_time:ams,
+	// 					_endTime:ame,
+	// 				},
+	// 				afternoon: {
+	// 					_time:pms,
+	// 					_endTime:pme,
+	// 				},
+	// 				day:"Monday"
+
+	// 			},
+	// 			{
+	// 				morning: {
+	// 					_time:ams,
+	// 					_endTime:ame,
+	// 				},
+	// 				afternoon: {
+	// 					_time:pms,
+	// 					_endTime:pme,
+	// 				},
+	// 				day:"Tuesday"
+
+	// 			},
+	// 			{
+	// 				morning: {
+	// 					_time:ams,
+	// 					_endTime:ame,
+	// 				},
+	// 				afternoon: {
+	// 					_time:pms,
+	// 					_endTime:pme,
+	// 				},
+	// 				day:"Wednesday"
+
+	// 			},
+	// 			{
+	// 				morning: {
+	// 					_time:ams,
+	// 					_endTime:ame,
+	// 				},
+	// 				afternoon: {
+	// 					_time:pms,
+	// 					_endTime:pme,
+	// 				},
+	// 				day:"Thursday"
+
+	// 			},
+	// 			{
+	// 				morning: {
+	// 					_time:ams,
+	// 					_endTime:ame,
+	// 				},
+	// 				afternoon: {
+	// 					_time:pms,
+	// 					_endTime:pme,
+	// 				},
+	// 				day:"Friday"
+
+	// 			},
+	// 			{
+	// 				morning: {
+	// 					_time:ams,
+	// 					_endTime:ame,
+	// 				},
+	// 				afternoon: {
+	// 					_time:pms,
+	// 					_endTime:pme,
+	// 				},
+	// 				day:"Saturday"
+
+	// 			},
+	// 			{
+	// 				morning: {
+	// 					_time:ams,
+	// 					_endTime:ame,
+	// 				},
+	// 				afternoon: {
+	// 					_time:pms,
+	// 					_endTime:pme,
+	// 				},
+	// 				day:"Sunday"
+
+	// 			}
+
+	// 		]
+	// 	});
+
+	// let staffObj  = staff.toObject();
+	// delete staffObj._id;
 
 	
 
@@ -470,7 +560,7 @@ exports.setSchedule = async function(req,res,next){
 		
 		
 
-		Staff.update({},staffObj,{multi:true},function(err){
+		Staff.update({},{$set: {schedule:stObj}},{multi:true},function(err){
 			if(err){return next(err)}
 			
 		})
@@ -491,9 +581,31 @@ exports.setSchedule = async function(req,res,next){
 
 		// })
 
-		let sched = new Staff({
+		// let sched = new Staff({
 
-			schedule: [
+		// 	schedule: [
+		// 		{
+		// 			morning: {
+
+		// 				_time:ams,
+		// 				_endTime:ame
+
+		// 			},
+		// 			afternoon: {
+		// 				_time:pms,
+		// 				_endTime:pme
+		// 			},
+		// 			day:sday
+		// 		}
+		// 	]
+
+		// });
+
+		// let schedObj = sched.toObject();
+		// delete schedObj._id;
+
+
+		let stObj1 = [
 				{
 					morning: {
 
@@ -509,18 +621,13 @@ exports.setSchedule = async function(req,res,next){
 				}
 			]
 
-		});
-
-		let schedObj = sched.toObject();
-		delete schedObj._id;
-
 		
 
 		Staff.update({},{$pull: {'schedule':{'day':sday}}},{multi:true},function(err,sched){
 			if(err){return next(err)}	
 		});
 
-		await Staff.update({},{$addToSet: schedObj},{multi:true},function(err){
+		await Staff.update({},{$addToSet: {schedule:stObj1}},{multi:true},function(err){
 			if(err){return next(err)}
 			res.json("ok");
 		});
@@ -533,7 +640,7 @@ exports.setSchedule = async function(req,res,next){
 	if(mode==="all" && whole==="manual"){
 		console.log("ALL ANUAL")
 
-		Staff.update({_id},staffObj,{multi:true},function(err){
+		Staff.update({_id},{$set: {schedule:stObj}},{multi:true},function(err){
 			if(err){return next(err)}
 			console.log("ALL ANUAL")
 		})
@@ -551,8 +658,14 @@ exports.setSchedule = async function(req,res,next){
 			console.log(sched)
 		});
 
-		let schedmanual = new Staff({
-			schedule: [
+		// let schedmanual = new Staff({
+		// 	schedule:
+		// });
+
+		// let smObj = schedmanual.toObject();
+		// delete smObj._id;
+
+		let stObj3 =  [
 				{
 					morning: {
 
@@ -567,13 +680,9 @@ exports.setSchedule = async function(req,res,next){
 					day:sday
 				}
 			]
-		});
-
-		let smObj = schedmanual.toObject();
-		delete smObj._id;
 
 
-		await Staff.update({_id},{$addToSet: smObj},function(err){
+		await Staff.update({_id},{$addToSet: {schedule:stObj3}},function(err){
 			if(err){return console.log(err); next(err)}
 			res.json("ok");
 		}) 
@@ -589,16 +698,10 @@ exports.setSchedule = async function(req,res,next){
 exports.resetSchedule = function(req,res,next){
 
 
-	let pnon = new Staff({
-		schedule: [
+	let stObj4 = []
+	
 
-		]
-	});
-
-	let pnonObj = pnon.toObject();
-	delete pnonObj._id;
-
-	Staff.update({},pnonObj,{multi:true},function(err){
+	Staff.update({},{$set:{schedule:stObj4}},{multi:true},function(err){
 		if(err){return next(err)}
 		res.json("ok");
 	})
