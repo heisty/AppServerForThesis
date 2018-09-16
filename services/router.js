@@ -190,6 +190,8 @@ router.route('/acceptap')
 	.post(Schedule.acceptAp);
 router.route('/setcompleteap')
 	.post(Schedule.setCompleteAp);
+router.route('/gas')
+	.post(Schedule.getAllSchedule);
 
 // customer shit
 

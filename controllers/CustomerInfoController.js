@@ -254,13 +254,13 @@ exports.getRecords = function(req,res,next){
 	})
 }
 
-exports.getCustomerInfo = function(req,res,next){
+exports.getCustomerInfo = async function(req,res,next){
 	let {
 		userid
 	} = req.body;
-	Customer.find({_id:userid},function(err,userinfo){
+	await Customer.find({_id:userid},function(err,userinfo){
 		if(err){return next(err)}
-		console.log(userinfo)
+		
 		res.json({userinfo:userinfo});
 	})
 }

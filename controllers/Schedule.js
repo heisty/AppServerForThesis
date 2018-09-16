@@ -12,7 +12,6 @@ exports.getScheduledEmployees = function(req,res,next){
 
 	console.log(day,time,suffix,skill);
 
-	console.log(suffix);
 
 	if(suffix==="AM"){
 		Staff.find({$and:[{'skills.label':skill},{'schedule.day':day},{'available':true},{'schedule.morning._time':{$lte:time}},{'schedule.morning._endTime':{$gt:time}}]},function(err,staff){
@@ -110,6 +109,8 @@ exports.setAppointment = function(req,res,next){
 		
 	} = req.body;
 
+	console.log("BODY",req.body);
+
 	let date1 = new Date(date);
 	let m = date1.getMonth()+1;
 	if(m<10)m=`0${m}`;
@@ -187,7 +188,8 @@ exports.myPositionOnQueue = async function(req,res,next){
 		staffid=staff._id;
 		}
 		catch(error){
-			console.log("NO ID");
+			// console.log("NO ID");
+			// staffid=null
 		}
 
 	})
@@ -200,7 +202,8 @@ exports.myPositionOnQueue = async function(req,res,next){
 	console.log("TIMEX",timex1);
 	}
 	catch(error){
-		console.log("NO FOUND TIMEZ")
+		// console.log("NO FOUND TIMEZ")
+		// timex1=null
 	}
 	});
 
@@ -308,6 +311,7 @@ exports.myPositionOnQueue = async function(req,res,next){
 }
 catch(error){
 	console.log("ERR",error);
+	res.json("F")
 }
 
 	
@@ -766,7 +770,12 @@ exports.acceptAp = function(req,res,next) {
 }
 
 
-exports.setCompleteAp = function(req,res,next){
+exports.setCompleteAp = async function(req,res,next){
+
+	let {
+		staffid,
+		appid
+	} = req.body;
 	
 	console.log(req.body);
 	let dte = new Date();
@@ -799,9 +808,14 @@ exports.setCompleteAp = function(req,res,next){
 	
 	});
 
-	transaction.save(function(err){
+	await transaction.save(function(err){
 		if(err){return next(err)}
-		res.json("ok");
+	
+	})
+
+	Staff.update({_id:staffid},{$pull:{'appointment':{'_id':appid}}},function(err){
+		if(err){return next(err)}
+		res.json('ok')
 	})
 
 
@@ -811,12 +825,12 @@ exports.setCompleteAp = function(req,res,next){
 
 // get specific recent appointments for customer
 
-exports.getCustRecent = function(req,res,next){
+exports.getCustRecent = async function(req,res,next){
 	let {userid} = req.body;
 
-	Transaction.find({userid},function(err,staff){
+	await Transaction.find({userid},function(err,staff){
 		if(err){return next(err)}
-		console.log(staff,userid);
+		
 		res.json({staff});
 	})
 }
@@ -880,7 +894,7 @@ exports.numberOfCustomers = async function(req,res,next){
 					$match: {
 						staffid,
 						status: 'completed',
-						$week: {date: dataret}
+						
 					}
 				}
 			],function(err,weekly){
@@ -972,6 +986,22 @@ exports.rating = async function(req,res,next){
 	});
 
 	
+
+
+
+}
+
+
+
+exports.getAllSchedule = async function(req,res,next){
+	let {
+		day,
+		time,
+		suffix,
+		skill
+	} = req.body;
+
+
 
 
 
