@@ -61,6 +61,11 @@ exports.deletePayment = function(req,res,next){
 
 exports.getAllLiveAppointments = function(req,res,next){
 	
+	Staff.find({'appointment.accepted':false},function(err,appointments){
+		if(err){return next(err)}
+		res.json({appointments});
+	})
+
 }
 
 exports.getDaily = function(req,res,next){
@@ -504,5 +509,229 @@ exports.getUsed = function(req,res,next){
 		if(err){return next(err)}
 		res.json({invent});
 	})
+}
+
+exports.getEMS = async function(req,res,next){
+
+	let {
+		staffid,
+		date=new Date()
+	} = req.body;
+
+
+	let month = date.getMonth()+1;
+	let year = date.getFullYear();
+	let day = date.getDate();
+	let week = date.getDate()/7;
+
+	if(week<=1)week=1
+	if(week>1 && week<=2)week=2
+	if(week>2 && week<=3)week=3
+	if(week>3 && (week<=4 || week>4)) week=4
+
+	let daily;
+	let custno;
+	let custrated;
+	let custrating;
+
+	let totalcustno;
+
+	let weekly;
+	let monthly;
+	let yearly;
+
+
+	await Transaction.aggregate([
+
+			{
+				$match: {
+
+					staffid,
+					month,
+					year,
+					day,
+					paid:true,
+				}
+			},
+			{
+				$count: 'cno'
+			}
+
+		],function(err,result){
+			if(err){return next(err)}
+			result.map(function(item){
+				custno=item.cno;
+			})
+			//res.json({custno})
+	})
+
+
+	await Transaction.aggregate([
+
+			{
+				$match: {
+
+					staffid,
+					month,
+					year,
+					day,
+					paid:true,
+				}
+			},
+			{
+				$group: {
+
+					_id:null,
+					'dt':{$sum:'$price'}
+				}
+			}
+
+		],function(err,result){
+			if(err){return next(err)}
+			result.map(function(item){
+				daily=item.dt
+			})
+
+		//res.json({custno,daily});
+			
+	})
+
+	await Transaction.aggregate([
+
+			{
+				$match: {
+
+					staffid,
+					week,
+					year,
+					paid:true,
+				}
+			},
+			{
+				$group: {
+
+					_id:null,
+					'dt':{$sum:'$price'}
+				}
+			}
+
+		],function(err,result){
+			if(err){return next(err)}
+			result.map(function(item){
+				weekly=item.dt
+			})
+
+		
+			
+	})
+
+	await Transaction.aggregate([
+
+			{
+				$match: {
+
+					staffid,
+					month,
+					year,
+					paid:true,
+				}
+			},
+			{
+				$group: {
+
+					_id:null,
+					'dt':{$sum:'$price'}
+				}
+			}
+
+		],function(err,result){
+			if(err){return next(err)}
+			result.map(function(item){
+				monthly=item.dt
+
+			})
+
+		
+			
+	})
+
+	
+
+	await Transaction.aggregate([
+
+			{
+				$match: {
+
+					staffid,
+					paid:true,
+					year
+				}
+			},
+			{
+				$group: {
+
+					_id:null,
+					'dt':{$sum:'$price'}
+				}
+			}
+
+		],function(err,result){
+			if(err){return next(err)}
+			result.map(function(item){
+				yearly=item.dt
+			})
+
+
+			//res.json({custno,daily,weekly,monthly,yearly})
+		
+			
+	})
+
+	await Transaction.aggregate([
+			{
+				$match: {
+					staffid,
+					paid:true,
+					//rating: {$gt: 0}
+				}
+			},
+			
+			{
+				$count: 'res'
+			}
+		],function(err,result){
+			if(err){return next(err)}
+			result.map(function(item){
+				custrated=item.res
+			})
+	})
+
+	await Transaction.aggregate([
+			{
+				$match: {
+					staffid,
+					paid:true,
+					//rating: {$gt: 0}
+				}
+			},
+			
+			{
+				$group: {
+					_id:null,
+					'rate':{$sum:'$rating'}
+				}
+			}
+		],function(err,result){
+			if(err){return next(err)}
+			result.map(function(item){
+				//res.json(item)
+			})
+	})
+
+	
+	res.json({custno,daily,weekly,monthly,yearly,custrated,custrating})
+
+
+
 }
 

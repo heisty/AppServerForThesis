@@ -188,6 +188,8 @@ router.route('/updateorder')
 	.post(Schedule.updateOrder);
 router.route('/acceptap')
 	.post(Schedule.acceptAp);
+router.route('/rejectap')
+	.post(Schedule.rejectAp);
 router.route('/setcompleteap')
 	.post(Schedule.setCompleteAp);
 router.route('/gas')
@@ -235,6 +237,9 @@ router.route('/deletepayment')
 router.route('/getsppayments')
 	.post(Payment.getSpecificPayments);
 
+router.route('/getala')
+	.post(Payment.getAllLiveAppointments);	
+
 router.route('/getsales')
 	.post(Payment.getSales);	
 
@@ -252,6 +257,8 @@ router.route('/getspinv')
 	.post(Payment.getSpecificInventory);
 router.route('/getused')
 	.post(Payment.getUsed);
+router.route('/getems')
+	.post(Payment.getEMS);
 router.route('/admin')
 	.post(AuthenticationController.adminLogin);
 

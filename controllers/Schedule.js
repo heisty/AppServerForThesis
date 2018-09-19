@@ -252,7 +252,7 @@ exports.myPositionOnQueue = async function(req,res,next){
 		catch(error){}
 
 
-
+		//res.json('ok')
 
 		})
 
@@ -311,7 +311,7 @@ exports.myPositionOnQueue = async function(req,res,next){
 }
 catch(error){
 	console.log("ERR",error);
-	res.json("F")
+	//res.json("F")
 }
 
 	
@@ -769,8 +769,28 @@ exports.acceptAp = function(req,res,next) {
 	})
 }
 
+exports.rejectAp = function(req,res,next) {
+	let {
+
+		staffid,
+		appid,
+
+	} = req.body;
+
+	console.log(staffid,appid);
+
+	Staff.update({_id:staffid},{$pull:{'appointment':{'_id':appid}}},function(err){
+		if(err){return next(err)}
+		res.json("deleted");
+	})
+}
+
+
 
 exports.setCompleteAp = async function(req,res,next){
+
+
+	// I DELETED THE ZERO () in query beware
 
 	let {
 		staffid,
