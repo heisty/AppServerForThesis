@@ -1,5 +1,6 @@
 const Transaction = require('../models/transactionSchema');
 const Staff =  require('../models/staffschema');
+const Suggestion = require('../models/suggestion');
 
 // make payment
 
@@ -29,7 +30,7 @@ exports.makePayment = function(req,res,next){
 
 exports.getPayments = function(req,res,next){
 	console.log("RECEIVED");
-	Transaction.find({$or:[{remit:false},{paid:false}]},function(err,payments){
+	Transaction.find({$or:[{remit:false},{paid:false}],status:'completed'},function(err,payments){
 		if(err){return next(err)}
 		res.json({payments:payments});
 
@@ -735,3 +736,40 @@ exports.getEMS = async function(req,res,next){
 
 }
 
+
+exports.suggestion = function(req,res,next){
+	let {
+		userid,customer,suggestion
+	} = req.body;
+
+	let suggestionModel = new Suggestion({
+		...req.body
+	});
+
+	suggestionModel.save(function(err){
+		if(err){return next(err)}
+		res.json('suggestion added');
+	})
+}
+
+exports.findUnrated = function(req,res,next){
+	let {userid} = req.body;
+	Transaction.findOne({userid:userid,rating:0},{_id:1},function(err,unrate){
+		if(err){return next(err)}
+		res.json({unrate});
+	})
+}
+
+
+
+exports.rate = function(req,res,next){
+	let {
+		_id,
+		rating
+	} = req.body;
+
+	Transaction.update({_id},{$set:{rating}},function(err,result){
+		if(err){return next(err)}
+		res.json("ok")
+	})
+}

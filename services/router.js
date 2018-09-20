@@ -261,8 +261,13 @@ router.route('/getems')
 	.post(Payment.getEMS);
 router.route('/admin')
 	.post(AuthenticationController.adminLogin);
+router.route('/suggestion')
+	.post(Payment.suggestion);
 
-	
+router.route('/fu')
+	.post(Payment.findUnrated);
+router.route('/rate')
+	.post(Payment.rate);
 
 
 	
