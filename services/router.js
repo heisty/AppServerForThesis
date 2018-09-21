@@ -268,6 +268,14 @@ router.route('/fu')
 	.post(Payment.findUnrated);
 router.route('/rate')
 	.post(Payment.rate);
+router.route('/istaken')
+	.post(Schedule.isTaken);
+
+router.route('/gall')
+	.post(TransactionController.getALL);
+
+router.route('/notif')
+	.post(Schedule.setNotif);
 
 
 	

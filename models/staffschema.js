@@ -54,7 +54,11 @@ const staffSchema = mongoose.Schema({
 			price: {type: Number},
 			time: {type: Number},
 			suffix: {type: String},
-			position: {type: Number}
+			latitude: {type: Number},
+			longitude: {type: Number},
+			position: {type: Number},
+			notified1: {type: String},
+			notified2: {type: String}
 		}
 	],
 	location: 

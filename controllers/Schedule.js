@@ -106,6 +106,8 @@ exports.setAppointment = function(req,res,next){
 		price,
 		duration,
 		suffix,
+		latitude,
+		longitude
 		
 	} = req.body;
 
@@ -137,6 +139,10 @@ exports.setAppointment = function(req,res,next){
 				price:price,
 				duration:duration,
 				suffix:suffix,
+				latitude,
+				longitude,
+				notified1:"false",
+				notified2:"false",
 				
 			}
 		]
@@ -1027,5 +1033,79 @@ exports.getAllSchedule = async function(req,res,next){
 
 }
 
+exports.isTaken = async function(req,res,next){
+	let {
+		staffid,time
+	} = req.body;
+
+	
+	time=parseInt(time);
+	let dx = new Date();
+	let day = dx.getDay();
+
+	let days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+
+	day=days[day];
+	let count=0;
+
+	let date1 = new Date(dx);
+	let m = date1.getMonth()+1;
+	if(m<10)m=`0${m}`;
+	let d = date1.getDate();
+	if(d<10)d=`0${d}`;
+	let y = date1.getFullYear();
+
+	let date_ = `${y}-${m}-${d}`;
+
+
+
+
+	await Staff.aggregate([
+
+			{
+				$unwind: '$appointment'
+			},
+			{
+				$match: {
+					'appointment.staffid':staffid,
+					'appointment.time': {$lt:time},
+					'appointment.duration': {$gt:time},
+					'appointment.date':new Date(date_),
+					'appointment.accepted':'true'
+				}
+			},
+			{
+				$count: 'x'
+			}
+		],function(err,st){
+			if(err){return next(err)}
+			try{
+				
+			res.json({count:st[0].x});
+			}
+			catch(error){res.json({count:0})}
+		})
+}
+
+
+exports.setNotif = function(req,res,next){
+
+			let {
+				userid,
+				not
+			} = req.body;
+
+			if(not===1){
+					Staff.update({'appointment.userid':userid},{$set: {'appointment[0].notified1':"true"}},function(err){
+					if(err){return next(err)}
+						res.json('ok')
+				})
+			}
+			else {
+					Staff.update({'appointment.userid':userid},{$set: {'appointment[0].notified2':"true"}},function(err){
+					if(err){return next(err)}
+						res.json('ok')
+				})
+			}
  
-       
+       }

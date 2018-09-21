@@ -142,3 +142,36 @@ catch(error){
 	
 }
 
+
+exports.getALL = function(req,res,next){
+	// Staff.find({'appointment.accepted':true},{_id:0,appointment:1},function(err,appx){
+	// 	if(err){return next(err)}
+	// 	res.json(appx);
+	// })
+
+	Staff.aggregate([
+
+	{
+		$unwind: '$appointment'
+	},
+
+	{
+		$match: {
+			'appointment.accepted':'true'
+		}
+	},
+	{
+		$project: {
+			
+			_id:0,
+			'appointment':1
+		}
+	}
+
+		],function(err,app){
+
+			if(err){return next(err)}
+			res.json({app})
+
+	})
+}
