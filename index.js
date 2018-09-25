@@ -27,6 +27,7 @@ var app = express();
 mongoose.connect('mongodb://admin:123admin@ds045087.mlab.com:45087/jnlbha');
 
 app.use(morgan('combined'));
+app.use(cors());
 app.use(bodyParser.json());
 app.use('/v1',router);
 
