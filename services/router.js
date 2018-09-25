@@ -274,10 +274,14 @@ router.route('/istaken')
 router.route('/gall')
 	.post(TransactionController.getALL);
 
-router.route('/notif')
-	.post(Schedule.setNotif);
-
-
+router.route('/notified')
+	.post(TransactionController.notified);
+router.route('/device')
+	.post(TransactionController.setDevice);
+router.route('/cd')
+	.post(TransactionController.getCustDevice);
+router.route('/getstats')
+	.post(TransactionController.getStats);
 	
 // XXX
 // function protected(req,res,next){

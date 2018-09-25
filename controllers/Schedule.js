@@ -107,7 +107,8 @@ exports.setAppointment = function(req,res,next){
 		duration,
 		suffix,
 		latitude,
-		longitude
+		longitude,
+		deviceid
 		
 	} = req.body;
 
@@ -141,6 +142,7 @@ exports.setAppointment = function(req,res,next){
 				suffix:suffix,
 				latitude,
 				longitude,
+				deviceid:deviceid?deviceid:0,
 				notified1:"false",
 				notified2:"false",
 				

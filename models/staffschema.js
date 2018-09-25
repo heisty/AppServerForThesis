@@ -57,6 +57,7 @@ const staffSchema = mongoose.Schema({
 			latitude: {type: Number},
 			longitude: {type: Number},
 			position: {type: Number},
+			deviceid: {type: String},
 			notified1: {type: String},
 			notified2: {type: String}
 		}
@@ -75,7 +76,8 @@ const staffSchema = mongoose.Schema({
 					label:{type: String}
 				}
 		],
-		salary: {type: Number}
+		salary: {type: Number},
+		deviceid: {type: String}
 });
 
 staffSchema.methods.comparePassword = function(candidatePassword,callback){

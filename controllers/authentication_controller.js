@@ -213,7 +213,7 @@ exports.customersignin = function(req,res,next){
 	
 }
 exports.customersignup = function(req,res,next){
-	var { username,password,firstname,lastname,email,contact,street,brgy,munc,city,lat,long } = req.body;
+	var { username,password,firstname,lastname,email,contact,street,brgy,munc,city,lat,long,deviceid } = req.body;
 	
 	User.findOne({username:username},function(err,exist){
 		if(err){return next(err)}
@@ -239,6 +239,7 @@ exports.customersignup = function(req,res,next){
 			city: city,
 			lat: lat,
 			long: long,
+			deviceid: deviceid
 
 		});
 
@@ -271,6 +272,7 @@ exports.signup = function(req,res,next){
 		let user = new User({
 			...req.body,
 			available:true,
+			deviceid:0,
 		});
 
 		user.save(function(err){

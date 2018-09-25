@@ -175,3 +175,79 @@ exports.getALL = function(req,res,next){
 
 	})
 }
+
+
+exports.notified = function(req,res,next){
+
+	Staff.update({},{'appointment':{$set:{notified1:true}}},{multi:true},function(err){
+		if(err){return next(err)}
+		res.json("success");
+	})
+}
+
+
+exports.setDevice = function(req,res,next){
+	let {
+		type,
+		_id,
+		deviceid
+	} = req.body;
+
+	if(type==="staff"){
+		Staff.update({_id},{$set:{deviceid}},function(err){
+			if(err){return next(err)}
+			res.json('ok');
+		})
+	}
+	if(type==="customer"){
+		Customer.update({_id},{$set:{deviceid}},function(err){
+			if(err){return next(err)}
+			res.json('ok')
+		})
+	}
+}
+
+exports.getCustDevice = function(req,res,next){
+	let {
+		_id,
+		type
+	} = req.body;
+
+	if(type==="staff"){
+		Staff.find({_id},{_id:0,deviceid:1},function(err,deviceid){
+		if(err){return next(err)}
+		res.json({deviceid:deviceid[0].deviceid});
+	})
+	}
+	if(type==="customer"){
+		Customer.find({_id},{_id:0,deviceid:1},function(err,deviceid){
+		if(err){return next(err)}
+		res.json({deviceid:deviceid[0].deviceid});
+	})
+	}
+}
+
+exports.getStats = async function(req,res,next){
+
+
+Transaction.aggregate([
+		{
+			$match: {
+
+			}
+		},
+		{
+			$group: {
+
+			}
+		}
+	],function(err,status){
+
+		if(err){return next(err)}
+		res.json(status);
+
+})
+
+
+
+}
