@@ -29,6 +29,11 @@ mongoose.connect('mongodb://admin:123admin@ds045087.mlab.com:45087/jnlbha');
 app.use(morgan('combined'));
 app.use(cors());
 app.use(bodyParser.json());
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
 app.use('/v1',router);
 
 var PORT = process.env.PORT || 3000;
