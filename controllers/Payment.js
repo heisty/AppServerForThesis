@@ -367,6 +367,28 @@ exports.realSales = async function(req,res,next){
 	let earn;
 	let sal;
 	let inv;
+	let sales;
+
+
+	await Transaction.aggregate([
+			{
+				$match: {
+					month,
+					year,
+					paid:true,
+				}
+			},
+			{
+				$count:'sales'
+			}
+		],function(err,sale){
+			try{
+			sales=sale[0].sales;
+		}
+		catch(error){}
+		})
+
+
 
 	await Transaction.aggregate([
 			{
@@ -452,7 +474,7 @@ exports.realSales = async function(req,res,next){
 				sal=item.salary
 			})
 
-			res.json({earn,inv,sal})
+			res.json({earn,inv,sal,sales})
 		})
 }
 
@@ -762,14 +784,29 @@ exports.findUnrated = function(req,res,next){
 
 
 
-exports.rate = function(req,res,next){
+exports.rate = async function(req,res,next){
 	let {
 		_id,
-		rating
+		rating,
+		suggestion,
+		customer
 	} = req.body;
 
-	Transaction.update({_id},{$set:{rating}},function(err,result){
+	 Transaction.update({_id},{$set:{rating}},function(err,result){
 		if(err){return next(err)}
-		res.json("ok")
+
+		let suggest =  new Suggestion({
+		userid:_id,
+		customer,
+		suggestion
+	});
+
+	suggest.save(function(err){
+		if(err){return next(err)}
+		res.json('ok')
 	})
+		
+	});
+
+	
 }

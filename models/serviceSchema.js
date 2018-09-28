@@ -7,7 +7,8 @@ const serviceSchema = mongoose.Schema({
 	duration: {type: Number},
 	price: {type: Number},
 	category: {type: String},
-	type: {type: String}
+	type: {type: String},
+	avatarURL: {type: String}
 
 });
 

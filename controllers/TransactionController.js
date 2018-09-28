@@ -229,24 +229,31 @@ exports.getCustDevice = function(req,res,next){
 
 exports.getStats = async function(req,res,next){
 
-
-Transaction.aggregate([
-		{
-			$match: {
-
-			}
-		},
-		{
-			$group: {
-
-			}
-		}
-	],function(err,status){
-
+	let c=0;
+	let pushX = [];
+	let dat=[];
+	await Staff.find({},async function(err,staff){
 		if(err){return next(err)}
-		res.json(status);
+		await staff.map(async function(entry){
+			await dat.push({"staffid":entry._id});
+		})
 
-})
+		
+	})
+
+	await dat.map(async function(entry){
+	 	await Transaction.countDocuments({staffid:entry.staffid},async function(err,sc){
+	 		if(err){return next(err)}
+	 		await pushX.push(sc);
+	 	})
+	 	
+	});
+
+	res.json(pushX)
+
+	
+
+
 
 
 
