@@ -260,8 +260,10 @@ exports.getCustomerInfo = async function(req,res,next){
 	} = req.body;
 	await Customer.find({_id:userid},function(err,userinfo){
 		if(err){return next(err)}
-		
+		try{
 		res.json({userinfo:userinfo});
+			}
+			catch(error){}
 	})
 }
 
