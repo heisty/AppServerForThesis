@@ -223,7 +223,7 @@ exports.customersignup = function(req,res,next){
 		return res.status(422).json({error: 'Please provide'});
 	}
 
-	Customer.findOne({username: username}, function(err,existingUser){
+	Customer.findOne({$or:[{username:username},{email:email}]}, function(err,existingUser){
 		if(err) {return next(err)}
 		if(existingUser) {return res.status(422).json({error: 'taken',statusCode: '422'});}
 		var customer = new Customer({

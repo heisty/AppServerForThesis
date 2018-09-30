@@ -11,6 +11,7 @@ var requireAuth = passport.authenticate('jwt',{session: false});
 var requireLogin = passport.authenticate('local',{session: false});
 const Payment = require('../controllers/Payment');
 const Verify = require('../controllers/Verify');
+const Recover = require('../controllers/Recover');
 
 // Auth 
 
@@ -283,6 +284,12 @@ router.route('/cd')
 router.route('/getstats')
 	.post(TransactionController.getStats);
 	
+
+
+
+
+router.route('/recover')
+	.post(Recover.sendEmail);
 // XXX
 // function protected(req,res,next){
 // 	res.send("Secret");
