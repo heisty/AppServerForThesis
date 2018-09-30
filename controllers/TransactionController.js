@@ -222,7 +222,10 @@ exports.getCustDevice = function(req,res,next){
 	if(type==="customer"){
 		Customer.find({_id},{_id:0,deviceid:1},function(err,deviceid){
 		if(err){return next(err)}
+		try{
 		res.json({deviceid:deviceid[0].deviceid});
+			}
+			catch(error){}
 	})
 	}
 }
