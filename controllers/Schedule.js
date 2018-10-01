@@ -261,7 +261,7 @@ exports.myPositionOnQueue = async function(req,res,next){
 
 
 		//res.json('ok')
-		res.json({pos:'?',data_n:'?',data:'?'});
+		//res.json({pos:'?',data_n:'?',data:'?'});
 
 		})
 
@@ -319,7 +319,7 @@ exports.myPositionOnQueue = async function(req,res,next){
 	
 }
 catch(error){
-	console.log("ERR",error);
+	//console.log("ERR",error);
 	//res.json("F")
 
 }

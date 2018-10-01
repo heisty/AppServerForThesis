@@ -270,7 +270,10 @@ exports.getCustomerInfo = async function(req,res,next){
 exports.getCustomerList = function(req,res,next){
 	Customer.find({},function(err,customers){
 		if(err){return next(err)}
+		try{
 		res.json({customers});
+	}
+	catch(error){}
 	})
 }
 
