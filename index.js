@@ -17,7 +17,7 @@ var app = express();
 // app.use('/v1',router);
 
 // var PORT = process.env.PORT || 3000;
-// var HOST = process.env.HOST || '192.168.30.5';
+// var HOST = process.env.HOST || '192.168.30.6';
 
 // console.log('Listening on ',PORT);
 // app.listen(PORT,HOST);

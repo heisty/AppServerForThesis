@@ -196,6 +196,9 @@ router.route('/setcompleteap')
 router.route('/gas')
 	.post(Schedule.getAllSchedule);
 
+router.route('/insalon')
+	.post(Schedule.inSalon);
+
 // customer shit
 
 router.route('/mba')
