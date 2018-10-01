@@ -32,7 +32,9 @@ exports.getPayments = function(req,res,next){
 	console.log("RECEIVED");
 	Transaction.find({$or:[{remit:false},{paid:false}],status:'completed'},function(err,payments){
 		if(err){return next(err)}
+		try{
 		res.json({payments:payments});
+	}catch(error){}
 
 	})
 }
@@ -44,7 +46,9 @@ exports.getSpecificPayments = function(req,res,next){
 	} = req.body;
 	Transaction.find({$or:[{remit:false},{paid:false}],userid:userid},function(err,payments){
 		if(err){return next(err)}
+		try{
 		res.json({payments:payments});
+	}catch(error){}
 
 	})
 }
