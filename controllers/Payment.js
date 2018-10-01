@@ -13,18 +13,19 @@ exports.makePayment = function(req,res,next){
 	} = req.body;
 
 	let paid = new Transaction({
-		paid:true
+		paid:true,
+		products
 	});
 
 	let paidObj = paid.toObject();
 	delete paidObj._id;
 
-	if(!newPrice && !products && !service){
+	
 		Transaction.update({_id:tid},paidObj,function(err){
 			if(err){return next(err)}
 			res.json('ok')
 		})
-	}
+	
 
 }
 
@@ -775,6 +776,13 @@ exports.suggestion = function(req,res,next){
 	suggestionModel.save(function(err){
 		if(err){return next(err)}
 		res.json('suggestion added');
+	})
+}
+
+exports.getSuggestion = function(req,res,next){
+	Suggestion.find({},function(err,suggestion){
+		if(err){return next(err)}
+		res.json({suggestion});
 	})
 }
 

@@ -272,6 +272,10 @@ router.route('/fu')
 	.post(Payment.findUnrated);
 router.route('/rate')
 	.post(Payment.rate);
+
+router.route('/getsuggestion')
+	.post(Payment.getSuggestion);
+
 router.route('/istaken')
 	.post(Schedule.isTaken);
 
