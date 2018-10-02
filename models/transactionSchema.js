@@ -23,7 +23,7 @@ const transactionSchema = mongoose.Schema({
 	year: {type: Number},
 	price: {type: Number},
 	status: {type: String},
-	rating: {type: String},
+	rating: {type: Number},
 	paid: {type: Boolean}
 
 

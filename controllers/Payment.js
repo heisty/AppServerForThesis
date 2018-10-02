@@ -720,7 +720,7 @@ exports.getEMS = async function(req,res,next){
 				$match: {
 					staffid,
 					paid:true,
-					//rating: {$gt: 0}
+					rating: {$gt: 0}
 				}
 			},
 			
@@ -739,7 +739,7 @@ exports.getEMS = async function(req,res,next){
 				$match: {
 					staffid,
 					paid:true,
-					//rating: {$gt: 0}
+					rating: {$gt: 0}
 				}
 			},
 			
@@ -752,11 +752,12 @@ exports.getEMS = async function(req,res,next){
 		],function(err,result){
 			if(err){return next(err)}
 			result.map(function(item){
-				//res.json(item)
+				custrating=(parseInt(item.rate)/5)*100;
+				
 			})
 	})
 
-	
+	//res.json(custrating);
 	res.json({custno,daily,weekly,monthly,yearly,custrated,custrating})
 
 
