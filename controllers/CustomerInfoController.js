@@ -263,7 +263,7 @@ exports.getCustomerInfo = async function(req,res,next){
 		try{
 		res.json({userinfo:userinfo});
 			}
-			catch(error){}
+			catch(error){return next(err)}
 	})
 }
 
@@ -273,7 +273,7 @@ exports.getCustomerList = function(req,res,next){
 		try{
 		res.json({customers});
 	}
-	catch(error){}
+	catch(error){return next(err)}
 	})
 }
 

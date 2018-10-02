@@ -35,7 +35,7 @@ exports.getPayments = function(req,res,next){
 		if(err){return next(err)}
 		try{
 		res.json({payments:payments});
-	}catch(error){}
+	}catch(error){return next(err)}
 
 	})
 }
@@ -49,7 +49,7 @@ exports.getSpecificPayments = function(req,res,next){
 		if(err){return next(err)}
 		try{
 		res.json({payments:payments});
-	}catch(error){}
+	}catch(error){return next(err)}
 
 	})
 }

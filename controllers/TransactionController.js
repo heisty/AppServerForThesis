@@ -137,7 +137,7 @@ else{
 }
 }
 catch(error){
-	console.log(error);
+	return next(err);
 }
 	
 }
@@ -225,7 +225,7 @@ exports.getCustDevice = function(req,res,next){
 		try{
 		res.json({deviceid:deviceid[0].deviceid});
 			}
-			catch(error){}
+			catch(error){return next(err)}
 	})
 	}
 }
