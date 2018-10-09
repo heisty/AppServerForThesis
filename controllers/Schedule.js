@@ -14,7 +14,7 @@ exports.getScheduledEmployees = function(req,res,next){
 
 
 	if(suffix==="AM"){
-		Staff.find({$and:[{'skills.label':skill},{'schedule.day':day},{'available':true},{'schedule.morning._time':{$lte:time}},{'schedule.morning._endTime':{$gt:time}}]},function(err,staff){
+		Staff.find({$and:[{'skills':{$elemMatch:{"label":skill}}},{'schedule.day':day},{'available':true},{'schedule.morning._time':{$lte:time}},{'schedule.morning._endTime':{$gt:time}}]},function(err,staff){
 		if(err){return next(err)}
 		console.log(staff);
 		return res.json({staff:staff});
