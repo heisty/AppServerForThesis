@@ -290,6 +290,9 @@ router.route('/cd')
 	.post(TransactionController.getCustDevice);
 router.route('/getstats')
 	.post(TransactionController.getStats);
+router.route('/ava')
+	.post(StaffController.setAVA);
+
 	
 
 

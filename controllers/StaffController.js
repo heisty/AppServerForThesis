@@ -162,3 +162,17 @@ exports.deleteEmployee = function(req,res,next){
 		res.json("ok")
 	});
 }    
+
+exports.setAVA = function(req,res,next){
+	let {
+		staffid,
+		available
+	} = req.body;
+
+
+	Staff.update({_id:staffid},{$set:{available}},function(err,resx){
+		if(err){return next(err)}
+		res.json("Good");
+	})
+
+}
