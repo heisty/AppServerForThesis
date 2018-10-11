@@ -195,6 +195,8 @@ router.route('/setcompleteap')
 	.post(Schedule.setCompleteAp);
 router.route('/gas')
 	.post(Schedule.getAllSchedule);
+router.route('/trans')
+	.post(Schedule.transfer);
 
 router.route('/insalon')
 	.post(Schedule.inSalon);
@@ -267,6 +269,8 @@ router.route('/admin')
 	.post(AuthenticationController.adminLogin);
 router.route('/suggestion')
 	.post(Payment.suggestion);
+router.route('/alterinv')
+	.post(Payment.alterInv);
 
 router.route('/fu')
 	.post(Payment.findUnrated);

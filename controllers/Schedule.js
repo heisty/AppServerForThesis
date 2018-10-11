@@ -1151,3 +1151,39 @@ exports.setNotif = function(req,res,next){
 			}
  
        }
+
+
+
+exports.transfer = async function(req,res,next){
+	let {
+		item,
+		target
+	} = req.body;
+
+	console.log(item,target);
+
+
+
+
+
+
+
+Staff.update({},{$pull:{'appointment':{'_id':item._id}}},function(err,resxv){
+		if(err){return next(err)}
+		 Staff.update({_id:target},{$addToSet:{appointment:item}},function(err,resx){
+		if(err){return next(err)}
+		res.json(resx)
+
+		
+
+
+	 })
+	
+	});
+
+	 
+
+	
+
+
+}

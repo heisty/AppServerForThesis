@@ -1,10 +1,11 @@
 const Transaction = require('../models/transactionSchema');
 const Staff =  require('../models/staffschema');
 const Suggestion = require('../models/suggestion');
+const Product = require('../models/Product');
 
 // make payment
 
-exports.makePayment = function(req,res,next){
+exports.makePayment = async function(req,res,next){
 	let {
 		newPrice,
 		products,
@@ -16,6 +17,7 @@ exports.makePayment = function(req,res,next){
 		paid:true,
 		products
 	});
+	
 
 	let paidObj = paid.toObject();
 	delete paidObj._id;
@@ -822,4 +824,30 @@ exports.rate = async function(req,res,next){
 	});
 
 	
+}
+
+
+exports.alterInv = async function(req,res,next){
+	let {
+		products
+	} = req.body;
+
+
+	let quant = 0;
+
+
+	await products.map(function(item){
+
+		quant = item.quantity;
+		name = item.name;
+
+		console.log(item)
+
+		Product.update({productname:name},{$inc:{quantity:-quant}},function(err){
+		if(err){return next(err)}
+		
+	})
+	})
+
+	res.json("ok")
 }
