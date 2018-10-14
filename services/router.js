@@ -12,6 +12,7 @@ var requireLogin = passport.authenticate('local',{session: false});
 const Payment = require('../controllers/Payment');
 const Verify = require('../controllers/Verify');
 const Recover = require('../controllers/Recover');
+const ITRANSACTION = require('../controllers/ITRANSACTION');
 
 // Auth 
 
@@ -297,6 +298,9 @@ router.route('/getstats')
 router.route('/ava')
 	.post(StaffController.setAVA);
 
+router.route('/existing')
+	.post(CustomerInfoController.existingUser);
+
 	
 
 
@@ -304,6 +308,9 @@ router.route('/ava')
 
 router.route('/recover')
 	.post(Recover.sendEmail);
+
+router.route('/itransact')
+	.post(ITRANSACTION.itransact);
 // XXX
 // function protected(req,res,next){
 // 	res.send("Secret");
@@ -311,5 +318,8 @@ router.route('/recover')
 
 // router.route('/protected')
 // 	.get(requireAuth,protected);
+
+
+
 
 module.exports = router;   

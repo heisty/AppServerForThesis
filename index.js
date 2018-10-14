@@ -17,7 +17,7 @@ var app = express();
 // app.use('/v1',router);
 
 // var PORT = process.env.PORT || 3000;
-// var HOST = process.env.HOST || '192.168.30.5';
+// var HOST = process.env.HOST || '192.168.30.6';
 
 // console.log('Listening on ',PORT);
 // app.listen(PORT,HOST);
@@ -35,6 +35,15 @@ app.use(function(req, res, next) {
     next();
 });
 app.use('/v1',router);
+
+
+app.get('/.well-known/acme-challenge/:content', function(req, res) {
+  res.send('tdbAHa97aQqSyb-wf3Wvy4ofxVkyeOLrS9yStNtMnZw')
+})
+
+app.get('/.well-known/acme-challenge/:content', function(req, res) {
+  res.send('ITg1EmVwgm8QWqFRiWWKqfNOUZVuGdC2b-T6l7lGwYQ')
+})
 
 var PORT = process.env.PORT || 3000;
 

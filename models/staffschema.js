@@ -2,10 +2,10 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt-nodejs');
 
 const staffSchema = mongoose.Schema({
-	username: {type: String,unique:true},
-	email: {type: String},
-	password: {type: String},
-	avatarlink: {type: String},
+	// username: {type: String,unique:true},
+	// email: {type: String},
+	// password: {type: String},
+	// avatarlink: {type: String},
 	firstname: {type: String},
 	lastname: {type: String},
 	contact: {type: String},

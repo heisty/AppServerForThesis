@@ -14,7 +14,8 @@ const customerSchema = mongoose.Schema({
 	city: {type: String},
 	lat: {type: String},
 	long: {type: String},
-	deviceid: {type: String}
+	deviceid: {type: String},
+	verified: {type: Boolean}
 });
 
 customerSchema.methods.comparePassword =  function(candidatePassword,callback){

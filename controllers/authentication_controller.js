@@ -223,7 +223,7 @@ exports.customersignup = function(req,res,next){
 		return res.status(422).json({error: 'Please provide'});
 	}
 
-	Customer.findOne({$or:[{username:username},{email:email}]}, function(err,existingUser){
+	Customer.findOne({$or:[{username:username}]}, function(err,existingUser){
 		if(err) {return next(err)}
 		if(existingUser) {return res.status(422).json({error: 'taken',statusCode: '422'});}
 		var customer = new Customer({
@@ -239,7 +239,8 @@ exports.customersignup = function(req,res,next){
 			city: city,
 			lat: lat,
 			long: long,
-			deviceid: deviceid
+			deviceid: deviceid,
+			verified:false,
 
 		});
 
@@ -262,12 +263,10 @@ exports.signup = function(req,res,next){
 
 	console.log(req.body);
 
-	if(!username || !password){
-		return res.status(422).json({error: 'Please provide'});
-	}
-	User.findOne({username: username}, function(err,existingUser){
-		if(err) {return next(err);}
-		if(existingUser) {return res.status(422).json({error: 'taken'});}
+	// if(!username || !password){
+	// 	return res.status(422).json({error: 'Please provide'});
+	// }
+	
 
 		let user = new User({
 			...req.body,
@@ -279,7 +278,7 @@ exports.signup = function(req,res,next){
 			if(err){return next(err)}
 			res.json("OK");
 		})
-	})
+	
 
 }
 

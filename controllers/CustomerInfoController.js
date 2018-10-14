@@ -309,3 +309,14 @@ exports.updateCustomerProfile = async function(req,res,next){
 		res.json("Updated");
 	})
 }
+
+exports.existingUser = function(req,res,next){
+	let {
+		contact
+	} = req.body;
+
+	Customer.countDocuments({contact},function(err,count){
+		if(err){return next(err)}
+		res.json({count});
+	})
+}

@@ -827,27 +827,46 @@ exports.rate = async function(req,res,next){
 }
 
 
-exports.alterInv = async function(req,res,next){
+exports.alterInv = function(req,res,next){
 	let {
-		products
+		_id,
+		quantity,
+		operate
 	} = req.body;
 
 
-	let quant = 0;
+	// let quant = 0;
 
 
-	await products.map(function(item){
+	// await products.map(function(item){
 
-		quant = item.quantity;
-		name = item.name;
+	// 	quant = item.quantity;
+	// 	name = item.name;
 
-		console.log(item)
+	// 	console.log(item)
 
-		Product.update({productname:name},{$inc:{quantity:-quant}},function(err){
-		if(err){return next(err)}
+	// 	Product.update({productname:name},{$inc:{quantity:-quant}},function(err){
+	// 	if(err){return next(err)}
 		
-	})
-	})
+	// })
+	// })
 
-	res.json("ok")
+	if(operate==="add"){
+
+			Product.update({_id},{$inc:{quantity}},function(err){
+				if(err){return next(err)}
+				res.json("ok");
+				})
+
+	}
+	if(operate==="reduce"){
+
+		Product.update({_id},{$inc:{quantity:-quantity}},function(err){
+				if(err){return next(err)}
+					res.json("ok");
+				})
+
+	}
+
+	
 }
