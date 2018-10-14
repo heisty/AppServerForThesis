@@ -37,7 +37,7 @@ app.use(function(req, res, next) {
 app.use('/v1',router);
 
 
-app.get('/.well-known/acme-challenge/:content', function(req, res) {
+app.get('/.well-known/acme-challenge/hFyya3xmKh-D1p0qip0vjPxRyEWJGbhFyPfCoCMHwl4', function(req, res) {
   res.send('hFyya3xmKh-D1p0qip0vjPxRyEWJGbhFyPfCoCMHwl4.gnhwtmYMRjIL-GtrEK-saAlOsuf0kuCGYQhETPYpwXs')
 })
 
