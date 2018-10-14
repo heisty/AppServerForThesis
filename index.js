@@ -38,11 +38,11 @@ app.use('/v1',router);
 
 
 app.get('/.well-known/acme-challenge/:content', function(req, res) {
-  res.send('tdbAHa97aQqSyb-wf3Wvy4ofxVkyeOLrS9yStNtMnZw')
+  res.send('tdbAHa97aQqSyb-wf3Wvy4ofxVkyeOLrS9yStNtMnZw.gnhwtmYMRjIL-GtrEK-saAlOsuf0kuCGYQhETPYpwXs')
 })
 
 app.get('/.well-known/acme-challenge/:content', function(req, res) {
-  res.send('ITg1EmVwgm8QWqFRiWWKqfNOUZVuGdC2b-T6l7lGwYQ')
+  res.send('ITg1EmVwgm8QWqFRiWWKqfNOUZVuGdC2b-T6l7lGwYQ.gnhwtmYMRjIL-GtrEK-saAlOsuf0kuCGYQhETPYpwXs')
 })
 
 var PORT = process.env.PORT || 3000;
