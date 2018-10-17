@@ -1086,12 +1086,12 @@ exports.getAllSchedule = async function(req,res,next){
 
 exports.isTaken =  function(req,res,next){
 	let {
-		staffid,time,suffix
+		staffid,time,suffix,date
 	} = req.body;
 
 	
 	time=parseInt(time);
-	let dx = new Date();
+	let dx = new Date(date);
 	let day = dx.getDay();
 
 	let days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
@@ -1108,7 +1108,8 @@ exports.isTaken =  function(req,res,next){
 
 	let date_ = `${y}-${m}-${d}`;
 
-		
+	let k = new Date(date_)
+	time-=10;
 
 	Staff.aggregate([
 
@@ -1120,7 +1121,7 @@ exports.isTaken =  function(req,res,next){
 					'appointment.staffid':staffid,
 					'appointment.time': {$lt:time},
 					'appointment.duration': {$gt:time},
-					'appointment.date':new Date(date_),
+					'appointment.date':k,
 					'appointment.accepted':'true',
 					'appointment.suffix':suffix,
 				}

@@ -11,41 +11,33 @@ mongoose.connect('mongodb://localhost/jnlbha');
 
 
 
-app.use(morgan('combined'));
-app.use(cors());
-app.use(bodyParser.json());
-app.use('/v1',router);
-
-var PORT = process.env.PORT || 3000;
-var HOST = process.env.HOST || '192.168.30.5';
-
-console.log('Listening on ',PORT);
-app.listen(PORT,HOST);
-
-//ON SERVER
-
-// mongoose.connect('mongodb://admin:123admin@ds045087.mlab.com:45087/jnlbha');
-
 // app.use(morgan('combined'));
 // app.use(cors());
 // app.use(bodyParser.json());
-// app.use(function(req, res, next) {
-//     res.header("Access-Control-Allow-Origin", "*");
-//     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-//     next();
-// });
 // app.use('/v1',router);
 
-
-// app.get('/.well-known/acme-challenge/hFyya3xmKh-D1p0qip0vjPxRyEWJGbhFyPfCoCMHwl4', function(req, res) {
-//   res.send('hFyya3xmKh-D1p0qip0vjPxRyEWJGbhFyPfCoCMHwl4.gnhwtmYMRjIL-GtrEK-saAlOsuf0kuCGYQhETPYpwXs')
-// })
-
-// app.get('/.well-known/acme-challenge/:content', function(req, res) {
-//   res.send('ITg1EmVwgm8QWqFRiWWKqfNOUZVuGdC2b-T6l7lGwYQ.gnhwtmYMRjIL-GtrEK-saAlOsuf0kuCGYQhETPYpwXs')
-// })
-
 // var PORT = process.env.PORT || 3000;
+// var HOST = process.env.HOST || '192.168.30.6';
 
 // console.log('Listening on ',PORT);
-// app.listen(PORT);  
+// app.listen(PORT,HOST);
+
+//ON SERVER
+
+//mongoose.connect('mongodb://admin:123admin@ds045087.mlab.com:45087/jnlbha');
+
+app.use(morgan('combined'));
+app.use(cors());
+app.use(bodyParser.json());
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
+app.use('/v1',router);
+
+
+var PORT = process.env.PORT || 3000;
+
+console.log('Listening on ',PORT);
+app.listen(PORT);  
