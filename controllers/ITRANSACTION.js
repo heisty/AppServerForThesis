@@ -29,7 +29,9 @@ exports.itransact = function(req,res,next){
 		week: wk,
 		day: dte.getDate(),
 		month: dte.getMonth()+1,
-		year: dte.getFullYear()
+		year: dte.getFullYear(),
+		hour: dte.getHours(),
+		minute: dte.getMinutes(),
 	});
 
 
@@ -40,4 +42,11 @@ exports.itransact = function(req,res,next){
 	
 
 
+}
+
+exports.getTransact = function(req,res,next){
+	ITransaction.find({},function(err,itransact){
+		if(err){return next(err)}
+		res.json({itransact});
+	})
 }

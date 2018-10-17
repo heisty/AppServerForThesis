@@ -24,7 +24,9 @@ const transactionSchema = mongoose.Schema({
 	price: {type: Number},
 	status: {type: String},
 	rating: {type: Number},
-	paid: {type: Boolean}
+	paid: {type: Boolean},
+	tendered: {type: String},
+	change: {type: String}
 
 
 });

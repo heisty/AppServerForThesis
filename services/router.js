@@ -311,6 +311,12 @@ router.route('/recover')
 
 router.route('/itransact')
 	.post(ITRANSACTION.itransact);
+
+router.route('/getTransact')
+	.post(ITRANSACTION.getTransact);
+
+router.route('/ca')
+	.post(AuthenticationController.changeAdmin);
 // XXX
 // function protected(req,res,next){
 // 	res.send("Secret");

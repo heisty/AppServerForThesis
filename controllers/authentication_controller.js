@@ -240,7 +240,7 @@ exports.customersignup = function(req,res,next){
 			lat: lat,
 			long: long,
 			deviceid: deviceid,
-			verified:false,
+			verified:true,
 
 		});
 
@@ -256,10 +256,10 @@ exports.customersignup = function(req,res,next){
 
 exports.signup = function(req,res,next){
 
-	let {
-		username,
-		password
-	} = req.body;
+	// let {
+	// 	username,
+	// 	password
+	// } = req.body;
 
 	console.log(req.body);
 
@@ -380,4 +380,22 @@ exports.adminLogin = function(req,res,next){
 			res.json({count:result})
 		})
 	}
+}
+
+exports.changeAdmin = function(req,res,next){
+	let {
+
+		username,
+		oldpass,
+		newpass
+	} = req.body;
+
+			
+			Admin.update({password:oldpass},{$set:{username,password:newpass}},function(err,up){
+				if(err){return next(err)}
+				res.json({affected:up.n})
+			})
+		
+	
+
 }

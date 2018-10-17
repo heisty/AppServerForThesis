@@ -59,7 +59,8 @@ const staffSchema = mongoose.Schema({
 			position: {type: Number},
 			deviceid: {type: String},
 			notified1: {type: String},
-			notified2: {type: String}
+			notified2: {type: String},
+			sorting: {type:Number}
 		}
 	],
 	location: 

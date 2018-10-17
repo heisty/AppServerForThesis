@@ -11,6 +11,8 @@ let i_transaction = mongoose.Schema({
 	month: {type: Number},
 	year: {type: Number},
 	week: {type: Number},
+	hour: {type: Number},
+	minute: {type: Number}
 
 });
 

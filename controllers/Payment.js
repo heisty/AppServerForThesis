@@ -10,12 +10,16 @@ exports.makePayment = async function(req,res,next){
 		newPrice,
 		products,
 		service,
-		tid
+		tid,
+		tendered,
+		change
 	} = req.body;
 
 	let paid = new Transaction({
 		paid:true,
-		products
+		products,
+		tendered,
+		change
 	});
 	
 
@@ -71,8 +75,26 @@ exports.getAllLiveAppointments = function(req,res,next){
 	
 	Staff.find({'appointment.accepted':false},function(err,appointments){
 		if(err){return next(err)}
-		res.json({appointments});
+			res.json({appointments});
+		
 	})
+
+
+	// Staff.aggregate([
+	// 		{
+	// 			$unwind:'$appointment'
+	// 		},
+	// 		{
+	// 			$match: {
+	// 				'appointment.accepted':false
+	// 			}
+	// 		}
+	// 	],function(err,appointments){
+
+	// 	if(err){return next(err)}
+	// 	res.json({appointments});
+
+	// })
 
 }
 

@@ -112,6 +112,12 @@ exports.setAppointment = function(req,res,next){
 		
 	} = req.body;
 
+	let sorting = duration;
+
+	if(suffix==="PM"){
+		sorting+=1000;
+	}
+
 	console.log("BODY",req.body);
 
 	let date1 = new Date(date);
@@ -145,6 +151,7 @@ exports.setAppointment = function(req,res,next){
 				deviceid:deviceid?deviceid:0,
 				notified1:"false",
 				notified2:"false",
+				sorting,
 				
 			}
 		]
@@ -804,7 +811,7 @@ exports.setCompleteAp = async function(req,res,next){
 
 	let {
 		staffid,
-		appid
+		appid,tendered,change
 	} = req.body;
 	
 	console.log(req.body);
@@ -833,7 +840,9 @@ exports.setCompleteAp = async function(req,res,next){
 		week: wk,
 		day: dte.getDate(),
 		month: dte.getMonth()+1,
-		year: dte.getFullYear()
+		year: dte.getFullYear(),
+		tendered:0,
+		change:0
 
 	
 	});
@@ -1075,9 +1084,9 @@ exports.getAllSchedule = async function(req,res,next){
 
 }
 
-exports.isTaken = async function(req,res,next){
+exports.isTaken =  function(req,res,next){
 	let {
-		staffid,time
+		staffid,time,suffix
 	} = req.body;
 
 	
@@ -1099,10 +1108,9 @@ exports.isTaken = async function(req,res,next){
 
 	let date_ = `${y}-${m}-${d}`;
 
+		
 
-
-
-	await Staff.aggregate([
+	Staff.aggregate([
 
 			{
 				$unwind: '$appointment'
@@ -1113,7 +1121,8 @@ exports.isTaken = async function(req,res,next){
 					'appointment.time': {$lt:time},
 					'appointment.duration': {$gt:time},
 					'appointment.date':new Date(date_),
-					'appointment.accepted':'true'
+					'appointment.accepted':'true',
+					'appointment.suffix':suffix,
 				}
 			},
 			{
