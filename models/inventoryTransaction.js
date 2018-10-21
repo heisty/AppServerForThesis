@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 let i_transaction = mongoose.Schema({
 	product: {type: String},
 	quantity: {type: Number},
+	price: {type: Number},
 	operation: {type: String},
 	refer: {type: String},
 	description: {type: String},

@@ -312,6 +312,9 @@ router.route('/recover')
 router.route('/itransact')
 	.post(ITRANSACTION.itransact);
 
+router.route('/customerhere')
+	.post(ITRANSACTION.customerHere);
+
 router.route('/getTransact')
 	.post(ITRANSACTION.getTransact);
 

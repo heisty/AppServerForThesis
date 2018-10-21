@@ -1,4 +1,5 @@
 const ITransaction = require('../models/inventoryTransaction');
+const Staff = require('../models/staffschema');
 
 exports.itransact = function(req,res,next){
 	
@@ -50,3 +51,15 @@ exports.getTransact = function(req,res,next){
 		res.json({itransact});
 	})
 }
+
+exports.customerHere = function(req,res,next){
+	let {
+		_id
+	} = req.body;
+
+	Staff.update({'appointment._id':_id},{$set:{'appointment.$.ishere':'true'}},function(err,resx){
+		if(err){return next(err)}
+		res.json(resx)
+	})
+}
+

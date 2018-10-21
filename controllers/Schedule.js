@@ -151,6 +151,7 @@ exports.setAppointment = function(req,res,next){
 				deviceid:deviceid?deviceid:0,
 				notified1:"false",
 				notified2:"false",
+				ishere:false,
 				sorting,
 				
 			}
@@ -1122,7 +1123,7 @@ exports.isTaken =  function(req,res,next){
 					'appointment.time': {$lt:time},
 					'appointment.duration': {$gt:time},
 					'appointment.date':k,
-					'appointment.accepted':'true',
+					
 					'appointment.suffix':suffix,
 				}
 			},

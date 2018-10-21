@@ -220,10 +220,10 @@ exports.getCustDevice = function(req,res,next){
 	})
 	}
 	if(type==="customer"){
-		Customer.find({_id},{_id:0,deviceid:1},function(err,deviceid){
+		Customer.find({_id},function(err,deviceid){
 		if(err){return next(err)}
 		try{
-		res.json({deviceid:deviceid[0].deviceid});
+				res.json({deviceid:deviceid[0].deviceid,contact:deviceid[0].contact});
 			}
 			catch(error){return next(err)}
 	})

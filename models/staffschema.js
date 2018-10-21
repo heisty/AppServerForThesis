@@ -60,6 +60,7 @@ const staffSchema = mongoose.Schema({
 			deviceid: {type: String},
 			notified1: {type: String},
 			notified2: {type: String},
+			ishere: {type: String},
 			sorting: {type:Number}
 		}
 	],
