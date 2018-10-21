@@ -10,13 +10,13 @@ exports.getScheduledEmployees = function(req,res,next){
 		day,time,suffix,skill
 	} = req.body;
 
-	console.log(day,time,suffix,skill);
+	
 
 
 	if(suffix==="AM"){
 		Staff.find({$and:[{'skills':{$elemMatch:{"label":skill}}},{'schedule.day':day},{'available':true},{'schedule.morning._time':{$lte:time}},{'schedule.morning._endTime':{$gt:time}}]},function(err,staff){
 		if(err){return next(err)}
-		console.log(staff);
+		
 		return res.json({staff:staff});
 	});
 	}
@@ -24,7 +24,7 @@ exports.getScheduledEmployees = function(req,res,next){
 	if(suffix==="PM"){
 		Staff.find({$and:[{'skills.label':skill},{'schedule.day':day},{'available':true},{'schedule.afternoon._time':{$lte:time}},{'schedule.afternoon._endTime':{$gt:time}}]},function(err,staff){
 		if(err){return next(err)}
-		console.log(staff);
+		
 		return res.json({staff:staff});
 	});
 	}
@@ -118,8 +118,6 @@ exports.setAppointment = function(req,res,next){
 		sorting+=1000;
 	}
 
-	console.log("BODY",req.body);
-
 	let date1 = new Date(date);
 	let m = date1.getMonth()+1;
 	if(m<10)m=`0${m}`;
@@ -176,11 +174,11 @@ exports.checkAppointment = function(req,res,next){
 		suffix,
 	} = req.body;
 
-	console.log(staffid);
+	
 
 	Staff.count({$and:[{_id:staffid,'appointment.date':date,'appointment.time':{$lte:time}},{'appointment.duration':{$gt:time}},{'appointment.suffix':suffix}]},function(err,found){
 		if(err){return next(err)}
-		console.log(found);
+		
 		res.json({found});
 	})
 }
@@ -215,7 +213,7 @@ exports.myPositionOnQueue = async function(req,res,next){
 	try{
 	
 	timex1=found.appointment[0].time;
-	console.log("TIMEX",timex1);
+	
 	}
 	catch(error){
 		// console.log("NO FOUND TIMEZ")
@@ -577,7 +575,7 @@ exports.setSchedule = async function(req,res,next){
 
 
 	if(mode==="all" && whole==="emp"){
-		console.log('ok full auto');
+	
 
 		
 		
@@ -592,7 +590,7 @@ exports.setSchedule = async function(req,res,next){
 
 	if(mode==="manual" && whole==="emp"){
 
-		console.log('ok semi manual');
+		
 
 		//delete the day for all
 
@@ -660,11 +658,11 @@ exports.setSchedule = async function(req,res,next){
 	}
 
 	if(mode==="all" && whole==="manual"){
-		console.log("ALL ANUAL")
+	
 
 		Staff.update({_id},{$set: {schedule:stObj}},{multi:true},function(err){
 			if(err){return next(err)}
-			console.log("ALL ANUAL")
+		
 		})
 
 
@@ -673,11 +671,11 @@ exports.setSchedule = async function(req,res,next){
 
 	if(mode==="manual" && whole==="manual"){
 
-		console.log("Engaging Full Manual");
+	
 
 		Staff.update({_id},{$pull: {'schedule':{'day':sday}}},function(err,sched){
 			if(err){return next(err)}	
-			console.log(sched)
+			
 		});
 
 		// let schedmanual = new Staff({
@@ -705,7 +703,7 @@ exports.setSchedule = async function(req,res,next){
 
 
 		await Staff.update({_id},{$addToSet: {schedule:stObj3}},function(err){
-			if(err){return console.log(err); next(err)}
+			if(err){return  next(err)}
 			res.json("ok");
 		}) 
 
@@ -779,7 +777,7 @@ exports.acceptAp = function(req,res,next) {
 
 	} = req.body;
 
-	console.log(staffid,appid);
+	;
 
 	Staff.update({_id:staffid,'appointment._id':appid},{$set: {'appointment.$.accepted':'true'}},function(err){
 		if(err){return next(err)}
@@ -795,7 +793,7 @@ exports.rejectAp = function(req,res,next) {
 
 	} = req.body;
 
-	console.log(staffid,appid);
+	
 
 	Staff.update({_id:staffid},{$pull:{'appointment':{'_id':appid}}},function(err){
 		if(err){return next(err)}
@@ -815,11 +813,11 @@ exports.setCompleteAp = async function(req,res,next){
 		appid,tendered,change
 	} = req.body;
 	
-	console.log(req.body);
+
 	let dte = new Date();
 	let wk;
 	let wk_ = dte.getDate()/7;
-	console.log(wk_);
+
 	if(wk_<1){
 		wk=1;
 	}
@@ -870,7 +868,7 @@ exports.inSalon = function(req,res,next){
 	let dte = new Date();
 	let wk;
 	let wk_ = dte.getDate()/7;
-	console.log(wk_);
+
 	if(wk_<1){
 		wk=1;
 	}
@@ -955,7 +953,7 @@ exports.numberOfCustomers = async function(req,res,next){
 	let date_ = `${y}-${m}-${d}`;
 
 	let dataret = new Date(date_);
-	console.log("DRET",dataret);
+
 
 	// Transaction.find({staffid},{_id:0,date:1},function(err,datee){
 	// 	if(err){return next(err)}
@@ -976,7 +974,7 @@ exports.numberOfCustomers = async function(req,res,next){
 					}
 				}
 			],function(err,weekly){
-				console.log(weekly)
+				
 			})
 
 		await Transaction.aggregate([
@@ -1094,7 +1092,7 @@ exports.isTaken =  function(req,res,next){
 	time=parseInt(time);
 	let dx = new Date(date);
 	let day = dx.getDay();
-
+	
 	let days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
 
 	day=days[day];
@@ -1110,7 +1108,11 @@ exports.isTaken =  function(req,res,next){
 	let date_ = `${y}-${m}-${d}`;
 
 	let k = new Date(date_)
-	time-=10;
+	time+=5;
+
+
+
+	
 
 	Staff.aggregate([
 
@@ -1123,7 +1125,6 @@ exports.isTaken =  function(req,res,next){
 					'appointment.time': {$lt:time},
 					'appointment.duration': {$gt:time},
 					'appointment.date':k,
-					
 					'appointment.suffix':suffix,
 				}
 			},
@@ -1132,11 +1133,16 @@ exports.isTaken =  function(req,res,next){
 			}
 		],function(err,st){
 			if(err){return next(err)}
-			try{
+			
+
+			try{	
 				
 			res.json({count:st[0].x});
-			}
-			catch(error){res.json({count:0})}
+		}
+		catch(error){
+			res.json({count:0})
+		}
+			
 		})
 }
 
@@ -1151,7 +1157,8 @@ exports.setNotif = function(req,res,next){
 			if(not===1){
 					Staff.update({'appointment.userid':userid},{$set: {'appointment[0].notified1':"true"}},function(err){
 					if(err){return next(err)}
-						res.json('ok')
+						res.json('ok');
+
 				})
 			}
 			else {
@@ -1171,7 +1178,7 @@ exports.transfer = async function(req,res,next){
 		target
 	} = req.body;
 
-	console.log(item,target);
+
 
 
 
