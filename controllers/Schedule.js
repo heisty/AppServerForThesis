@@ -1,4 +1,4 @@
-const Staff = require('../models/staffschema');
+fsetconst Staff = require('../models/staffschema');
 const Transaction = require('../models/transactionSchema');
 const Customer = require('../models/customerschema');
 const Service = require('../models/serviceSchema');

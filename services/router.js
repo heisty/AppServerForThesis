@@ -307,7 +307,7 @@ router.route('/existing')
 
 
 router.route('/recover')
-	.post(Recover.sendEmail);
+	.post(Recover.sendMobile);
 
 router.route('/itransact')
 	.post(ITRANSACTION.itransact);

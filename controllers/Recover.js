@@ -3,17 +3,17 @@ const Customer = require('../models/customerschema');
 const bcrypt = require('bcrypt-nodejs');
 
 
-exports.sendEmail = async function(req,res,next){
+exports.sendMobile = async function(req,res,next){
 
 	let {
-		email
+		username
 	} = req.body;
 
 	let found = 0;
 	let pass;
 	let hashx;
 
-	console.log(email);
+	//console.log(email);
 
 	pass= Math.random().toString(36).slice(-8);
 
@@ -25,9 +25,9 @@ exports.sendEmail = async function(req,res,next){
 		})
 	})
 
-	await Customer.update({email},{$set:{password:hashx}},function(err,account){
+	await Customer.update({username},{$set:{password:hashx}},function(err,account){
 			if(err){return next(err)}
-			
+			res.json({password:pass});;
 	})
 
 	
@@ -36,31 +36,31 @@ exports.sendEmail = async function(req,res,next){
 
 
 
-	let transporter = nodeMailer.createTransport({
-		service: 'Gmail',
-          host: 'smtp.gmail.com',
-          port: 465,
-          secure: true,
-          auth: {
-              user: 'llsalonrecover@gmail.com',
-              pass: 'Alucard123'
-          }
-      });
-      let mailOptions = {
-          from: '"LadyLyn Salon" <xx@gmail.com>', // sender address
-          to: `${email}`, // list of receivers
-          subject: 'New Password', // Subject line
-          text:'X', // plain text body
-          html: `<b>Your new password is ${pass}</b>` // html body
-      };
+	// let transporter = nodeMailer.createTransport({
+	// 	service: 'Gmail',
+ //          host: 'smtp.gmail.com',
+ //          port: 465,
+ //          secure: true,
+ //          auth: {
+ //              user: 'llsalonrecover@gmail.com',
+ //              pass: 'Alucard123'
+ //          }
+ //      });
+ //      let mailOptions = {
+ //          from: '"LadyLyn Salon" <xx@gmail.com>', // sender address
+ //          to: `${email}`, // list of receivers
+ //          subject: 'New Password', // Subject line
+ //          text:'X', // plain text body
+ //          html: `<b>Your new password is ${pass}</b>` // html body
+ //      };
 
-      transporter.sendMail(mailOptions, (error, info) => {
-          if (error) {
-              //res.json(error)
-              return next(err)
-          }
-         res.json("ok")
-      })
+ //      transporter.sendMail(mailOptions, (error, info) => {
+ //          if (error) {
+ //              //res.json(error)
+ //              return next(err)
+ //          }
+ //         res.json("ok")
+ //      })
 
 
 }
