@@ -3,6 +3,7 @@ const Transaction = require('../models/availSchema');
 const Customer = require('../models/customerschema');
 const Staff = require('../models/staffschema');
 const Service = require('../models/serviceSchema');
+const Audit = require('../models/audit');
 
 exports.saveAdminReport = function(req,res,next){
 	var {

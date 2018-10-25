@@ -318,6 +318,12 @@ router.route('/customerhere')
 router.route('/getTransact')
 	.post(ITRANSACTION.getTransact);
 
+router.route('/getAudit')
+	.post(ITRANSACTION.getAudit);
+
+router.route('/getAppX')
+	.post(ITRANSACTION.getAppX);
+
 router.route('/ca')
 	.post(AuthenticationController.changeAdmin);
 // XXX

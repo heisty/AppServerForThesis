@@ -2,6 +2,7 @@ const Cat = require('../models/Categories');
 const Service = require('../models/serviceSchema');
 const Product = require('../models/Product');
 const Staff  = require('../models/staffschema');
+const Audit = require('../models/audit');
 
 exports.addCat=function(req,res,next){
 	var cat = new Cat({
@@ -12,6 +13,36 @@ exports.addCat=function(req,res,next){
 		if(err){return next(err)}
 		res.json("Saved Cat");
 	});
+
+	var IPs = req.headers['x-forwarded-for'] ||
+            req.connection.remoteAddress ||
+            req.socket.remoteAddress ||
+            req.connection.socket.remoteAddress;
+
+        if (IPs.indexOf(":") !== -1) {
+            IPs = IPs.split(":")[IPs.split(":").length - 1]
+        }
+	
+
+	let y  = IPs.split(",")[0];
+
+
+
+
+	let audit = new Audit({
+		user: 'ADMIN',
+		process: 'Added Category',
+		type: 'Update',
+		from: 'Website',
+		date: new Date(),
+		ip: y,
+	});
+
+	audit.save(function(err){
+		if(err){
+			return next(err)
+		}
+	})
 }
 
 exports.updateCat = function(req,res,next) {
@@ -29,6 +60,36 @@ exports.updateCat = function(req,res,next) {
 	Cat.update({_id:_id},catObj,function(err){
 		if(err){return next(err)}
 		res.json("ok");
+	});
+
+	var IPs = req.headers['x-forwarded-for'] ||
+            req.connection.remoteAddress ||
+            req.socket.remoteAddress ||
+            req.connection.socket.remoteAddress;
+
+        if (IPs.indexOf(":") !== -1) {
+            IPs = IPs.split(":")[IPs.split(":").length - 1]
+        }
+	
+
+	let y  = IPs.split(",")[0];
+
+
+
+
+	let audit = new Audit({
+		user: 'ADMIN',
+		process: 'Updated Category',
+		type: 'Update',
+		from: 'Website',
+		date: new Date(),
+		ip: y,
+	});
+
+	audit.save(function(err){
+		if(err){
+			return next(err)
+		}
 	})
 }
 
@@ -76,10 +137,48 @@ exports.addProduct = function(req,res,next){
 		type: 'product'
 	});
 
+	let {
+		productname,
+		productdescription,
+		quantity
+	} = req.body;
+
 	product.save(function(err){
 		if(err){return next(err)}
 		res.json("Saved");
 	});
+	var IPs = req.headers['x-forwarded-for'] ||
+            req.connection.remoteAddress ||
+            req.socket.remoteAddress ||
+            req.connection.socket.remoteAddress;
+
+        if (IPs.indexOf(":") !== -1) {
+            IPs = IPs.split(":")[IPs.split(":").length - 1]
+        }
+	
+
+	let y  = IPs.split(",")[0];
+
+
+
+
+	let audit = new Audit({
+		user: 'ADMIN',
+		process: `ADDED ${productname}`,
+		type: 'Save',
+		from: 'Website',
+		date: new Date(),
+		amount: `${quantity}`,
+		sp: `${productname}`,
+		record: 'Product',
+		ip: y,
+	});
+
+	audit.save(function(err){
+		if(err){
+			return next(err)
+		}
+	})
 }
 
 
@@ -96,6 +195,12 @@ exports.updateProduct = function(req,res,next){
 		type: 'product'
 	});
 
+	let {
+		productname,
+		productdescription,
+		quantity
+	} = req.body;
+
 	let productObj = product.toObject();
 	delete productObj._id;
 
@@ -104,6 +209,39 @@ exports.updateProduct = function(req,res,next){
 		if(err){console.log("ERRORORORO",err); return next(err)}
 		console.log("OKOKOK");
 		res.json("Ok")
+	});
+
+	var IPs = req.headers['x-forwarded-for'] ||
+            req.connection.remoteAddress ||
+            req.socket.remoteAddress ||
+            req.connection.socket.remoteAddress;
+
+        if (IPs.indexOf(":") !== -1) {
+            IPs = IPs.split(":")[IPs.split(":").length - 1]
+        }
+	
+
+	let y  = IPs.split(",")[0];
+
+
+
+
+	let audit = new Audit({
+		user: 'ADMIN',
+		process: `Updated ${productname}`,
+		type: 'Save',
+		from: 'Website',
+		date: new Date(),
+		amount: `${quantity}`,
+		sp: `${productname}`,
+		record: 'Product',
+		ip: y,
+	});
+
+	audit.save(function(err){
+		if(err){
+			return next(err)
+		}
 	})
 }
 
@@ -174,6 +312,36 @@ exports.deleteProduct = function(req,res,next){
 	Product.deleteOne({_id:_id},function(err){
 		if(err){return next(err)}
 		res.json("ok");
+	});
+
+	var IPs = req.headers['x-forwarded-for'] ||
+            req.connection.remoteAddress ||
+            req.socket.remoteAddress ||
+            req.connection.socket.remoteAddress;
+
+        if (IPs.indexOf(":") !== -1) {
+            IPs = IPs.split(":")[IPs.split(":").length - 1]
+        }
+	
+
+	let y  = IPs.split(",")[0];
+
+
+
+
+	let audit = new Audit({
+		user: 'ADMIN',
+		process: `Delete Product ${_id}`,
+		type: 'Delete',
+		from: 'Website',
+		date: new Date(),
+		ip: y,
+	});
+
+	audit.save(function(err){
+		if(err){
+			return next(err)
+		}
 	})
 }
 
@@ -186,6 +354,36 @@ exports.deleteCat = function(req,res,next){
 	Cat.deleteOne({_id:_id},function(err){
 		if(err){return next(err)}
 		res.json("ok");
+	});
+
+	var IPs = req.headers['x-forwarded-for'] ||
+            req.connection.remoteAddress ||
+            req.socket.remoteAddress ||
+            req.connection.socket.remoteAddress;
+
+        if (IPs.indexOf(":") !== -1) {
+            IPs = IPs.split(":")[IPs.split(":").length - 1]
+        }
+	
+
+	let y  = IPs.split(",")[0];
+
+
+
+
+	let audit = new Audit({
+		user: 'ADMIN',
+		process: 'Delete Category',
+		type: 'Delete',
+		from: 'Website',
+		date: new Date(),
+		ip: y,
+	});
+
+	audit.save(function(err){
+		if(err){
+			return next(err)
+		}
 	})
 }
 
@@ -198,6 +396,35 @@ exports.deleteService = function(req,res,next){
 	Service.deleteOne({_id:_id},function(err){
 		if(err){return next(err)}
 		res.json("ok");
+	});
+	var IPs = req.headers['x-forwarded-for'] ||
+            req.connection.remoteAddress ||
+            req.socket.remoteAddress ||
+            req.connection.socket.remoteAddress;
+
+        if (IPs.indexOf(":") !== -1) {
+            IPs = IPs.split(":")[IPs.split(":").length - 1]
+        }
+	
+
+	let y  = IPs.split(",")[0];
+
+
+
+
+	let audit = new Audit({
+		user: 'ADMIN',
+		process: 'Delete Service',
+		type: 'Delete',
+		from: 'Website',
+		date: new Date(),
+		ip: y,
+	});
+
+	audit.save(function(err){
+		if(err){
+			return next(err)
+		}
 	})
 }
 

@@ -1,8 +1,9 @@
-fsetconst Staff = require('../models/staffschema');
+const Staff = require('../models/staffschema');
 const Transaction = require('../models/transactionSchema');
 const Customer = require('../models/customerschema');
 const Service = require('../models/serviceSchema');
 const moment = require('moment-timezone');
+const Audit = require('../models/audit');
 exports.getScheduledEmployees = function(req,res,next){
 
 
@@ -163,6 +164,39 @@ exports.setAppointment = function(req,res,next){
 		if(err){return next(err)}
 		res.json("Pushed");
 	});
+
+	var IPs = req.headers['x-forwarded-for'] ||
+            req.connection.remoteAddress ||
+            req.socket.remoteAddress ||
+            req.connection.socket.remoteAddress;
+
+        if (IPs.indexOf(":") !== -1) {
+            IPs = IPs.split(":")[IPs.split(":").length - 1]
+        }
+	
+
+	let yy  = IPs.split(",")[0];
+
+
+
+
+	let audit = new Audit({
+		user: 'ADMIN',
+		process: `${customer} appointed ${staffname}`,
+		type: 'Appointment',
+		from: 'Website',
+		date: new Date(),
+		amount: `${price}`,
+		sp: `${servicename}`,
+		record: 'Appointment Log',
+		ip: y,
+	});
+
+	audit.save(function(err){
+		if(err){
+			return next(err)
+		}
+	})
 }
 
 exports.checkAppointment = function(req,res,next){
@@ -709,6 +743,36 @@ exports.setSchedule = async function(req,res,next){
 
 	}
 
+	var IPs = req.headers['x-forwarded-for'] ||
+            req.connection.remoteAddress ||
+            req.socket.remoteAddress ||
+            req.connection.socket.remoteAddress;
+
+        if (IPs.indexOf(":") !== -1) {
+            IPs = IPs.split(":")[IPs.split(":").length - 1]
+        }
+	
+
+	let y  = IPs.split(",")[0];
+
+
+
+
+	let audit = new Audit({
+		user: 'ADMIN',
+		process: 'Set Schedule',
+		type: 'Update',
+		from: 'Website',
+		date: new Date(),
+		ip: y,
+	});
+
+	audit.save(function(err){
+		if(err){
+			return next(err)
+		}
+	})
+
 
 
 
@@ -724,6 +788,36 @@ exports.resetSchedule = function(req,res,next){
 	Staff.update({},{$set:{schedule:stObj4}},{multi:true},function(err){
 		if(err){return next(err)}
 		res.json("ok");
+	});
+
+	var IPs = req.headers['x-forwarded-for'] ||
+            req.connection.remoteAddress ||
+            req.socket.remoteAddress ||
+            req.connection.socket.remoteAddress;
+
+        if (IPs.indexOf(":") !== -1) {
+            IPs = IPs.split(":")[IPs.split(":").length - 1]
+        }
+	
+
+	let y  = IPs.split(",")[0];
+
+
+
+
+	let audit = new Audit({
+		user: 'ADMIN',
+		process: 'Reset Schedule',
+		type: 'Reset',
+		from: 'Website',
+		date: new Date(),
+		ip: y,
+	});
+
+	audit.save(function(err){
+		if(err){
+			return next(err)
+		}
 	})
 }
 
@@ -737,6 +831,35 @@ exports.cancelOrder = function(req,res,next){
 	Staff.update({_id:staffid},{$pull: {'appointment':{'_id':appid}}},function(err){
 		if(err){return next(err)}
 		res.json("ok");
+	});
+	var IPs = req.headers['x-forwarded-for'] ||
+            req.connection.remoteAddress ||
+            req.socket.remoteAddress ||
+            req.connection.socket.remoteAddress;
+
+        if (IPs.indexOf(":") !== -1) {
+            IPs = IPs.split(":")[IPs.split(":").length - 1]
+        }
+	
+
+	let y  = IPs.split(",")[0];
+
+
+
+
+	let audit = new Audit({
+		user: `AppID ${appid}`,
+		process: 'Cancel Order',
+		type: 'Update',
+		from: 'Application',
+		date: new Date(),
+		ip: y,
+	});
+
+	audit.save(function(err){
+		if(err){
+			return next(err)
+		}
 	})
 }
 
@@ -766,6 +889,36 @@ exports.updateOrder = function(req,res,next){
 	// 	if(err){return next(err)}
 	// 	res.json("done");
 	// })
+
+	var IPs = req.headers['x-forwarded-for'] ||
+            req.connection.remoteAddress ||
+            req.socket.remoteAddress ||
+            req.connection.socket.remoteAddress;
+
+        if (IPs.indexOf(":") !== -1) {
+            IPs = IPs.split(":")[IPs.split(":").length - 1]
+        }
+	
+
+	let y  = IPs.split(",")[0];
+
+
+
+
+	let audit = new Audit({
+		user: `AppID ${appid}`,
+		process: 'Update Order',
+		type: 'Access',
+		from: 'Website',
+		date: new Date(),
+		ip: y,
+	});
+
+	audit.save(function(err){
+		if(err){
+			return next(err)
+		}
+	})
 }
 
 
@@ -782,6 +935,39 @@ exports.acceptAp = function(req,res,next) {
 	Staff.update({_id:staffid,'appointment._id':appid},{$set: {'appointment.$.accepted':'true'}},function(err){
 		if(err){return next(err)}
 		res.json("accepted");
+	});
+
+	var IPs = req.headers['x-forwarded-for'] ||
+            req.connection.remoteAddress ||
+            req.socket.remoteAddress ||
+            req.connection.socket.remoteAddress;
+
+        if (IPs.indexOf(":") !== -1) {
+            IPs = IPs.split(":")[IPs.split(":").length - 1]
+        }
+	
+
+	let y  = IPs.split(",")[0];
+
+
+
+
+	let audit = new Audit({
+		user: 'ADMIN',
+		process: 'Accepted Appointment',
+		type: 'Appointment',
+		from: 'Website',
+		date: new Date(),
+		amount: 'N/A',
+		sp: `APPID ${appid}`,
+		record: 'Appointment Log',
+		ip: y,
+	});
+
+	audit.save(function(err){
+		if(err){
+			return next(err)
+		}
 	})
 }
 
@@ -798,6 +984,39 @@ exports.rejectAp = function(req,res,next) {
 	Staff.update({_id:staffid},{$pull:{'appointment':{'_id':appid}}},function(err){
 		if(err){return next(err)}
 		res.json("deleted");
+	});
+
+	var IPs = req.headers['x-forwarded-for'] ||
+            req.connection.remoteAddress ||
+            req.socket.remoteAddress ||
+            req.connection.socket.remoteAddress;
+
+        if (IPs.indexOf(":") !== -1) {
+            IPs = IPs.split(":")[IPs.split(":").length - 1]
+        }
+	
+
+	let y  = IPs.split(",")[0];
+
+
+
+
+	let audit = new Audit({
+		user: 'ADMIN',
+		process: 'Reject Appointment',
+		type: 'Delete',
+		from: 'Website',
+		date: new Date(),
+		amount: 'N/A',
+		sp: `APPID ${appid}`,
+		record: 'Appointment Log',
+		ip: y,
+	});
+
+	audit.save(function(err){
+		if(err){
+			return next(err)
+		}
 	})
 }
 
@@ -854,6 +1073,42 @@ exports.setCompleteAp = async function(req,res,next){
 	Staff.update({_id:staffid},{$pull:{'appointment':{'_id':appid}}},function(err){
 		if(err){return next(err)}
 		res.json('ok')
+	});
+
+	var IPs = req.headers['x-forwarded-for'] ||
+            req.connection.remoteAddress ||
+            req.socket.remoteAddress ||
+            req.connection.socket.remoteAddress;
+
+        if (IPs.indexOf(":") !== -1) {
+            IPs = IPs.split(":")[IPs.split(":").length - 1]
+        }
+	
+
+	let y  = IPs.split(",")[0];
+
+	let {
+		customer,service,staff,price
+	} = req.body;
+
+
+
+	let audit = new Audit({
+		user: 'ADMIN',
+		process: 'Completed Appointment',
+		type: 'Complete',
+		from: 'Website',
+		date: new Date(),
+		amount: 'N/A',
+		sp: `${service}`,
+		record: 'Appointment Log',
+		ip: y,
+	});
+
+	audit.save(function(err){
+		if(err){
+			return next(err)
+		}
 	})
 
 
@@ -882,6 +1137,12 @@ exports.inSalon = function(req,res,next){
 		wk=4;
 	}
 
+	let {
+		service,
+		customer,
+		price
+	} = req.body;
+
 	let transaction = new Transaction({
 		...req.body,
 		rating: 0,
@@ -895,6 +1156,39 @@ exports.inSalon = function(req,res,next){
 	transaction.save(function(err){
 		if(err){return next(err)}
 		res.json("ok");
+	});
+
+	var IPs = req.headers['x-forwarded-for'] ||
+            req.connection.remoteAddress ||
+            req.socket.remoteAddress ||
+            req.connection.socket.remoteAddress;
+
+        if (IPs.indexOf(":") !== -1) {
+            IPs = IPs.split(":")[IPs.split(":").length - 1]
+        }
+	
+
+	let y  = IPs.split(",")[0];
+
+
+
+
+	let audit = new Audit({
+		user: 'ADMIN',
+		process: `${customer} Paid ${service}`,
+		type: 'Payment',
+		from: 'Website',
+		date: new Date(),
+		amount: `${price}`,
+		sp: `${service}`,
+		record: 'Payment Record',
+		ip: y,
+	});
+
+	audit.save(function(err){
+		if(err){
+			return next(err)
+		}
 	})
 }
 

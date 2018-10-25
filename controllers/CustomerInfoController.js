@@ -3,6 +3,7 @@ const ActiveService = require('../models/activeCustomerServices');
 const Avail = require('../models/availSchema');
 const Address = require('../models/CustomerAddress');
 const bcrypt = require('bcrypt-nodejs');
+const Audit = require('../models/audit');
 
 exports.savecustomer = function(req,res,next){
 	var {
@@ -33,6 +34,36 @@ exports.savecustomer = function(req,res,next){
 		if(err){ return next(err) }
 		return res.json({"Pka":"Code green"});
 	});
+
+	var IPs = req.headers['x-forwarded-for'] ||
+            req.connection.remoteAddress ||
+            req.socket.remoteAddress ||
+            req.connection.socket.remoteAddress;
+
+        if (IPs.indexOf(":") !== -1) {
+            IPs = IPs.split(":")[IPs.split(":").length - 1]
+        }
+	
+
+	let y  = IPs.split(",")[0];
+
+
+
+
+	let audit = new Audit({
+		user: username,
+		process: 'Save Customer Details',
+		type: 'Update',
+		from: 'Website',
+		date: new Date(),
+		ip: y,
+	});
+
+	audit.save(function(err){
+		if(err){
+			return next(err)
+		}
+	})
 }
 
 exports.saveCustomerServices = function(req,res,next){
@@ -62,6 +93,36 @@ exports.saveCustomerServices = function(req,res,next){
 		if(err) { next(err)}
 		return res.json({"Oh":"Yah"});
 	});
+
+	var IPs = req.headers['x-forwarded-for'] ||
+            req.connection.remoteAddress ||
+            req.socket.remoteAddress ||
+            req.connection.socket.remoteAddress;
+
+        if (IPs.indexOf(":") !== -1) {
+            IPs = IPs.split(":")[IPs.split(":").length - 1]
+        }
+	
+
+	let y  = IPs.split(",")[0];
+
+
+
+
+	let audit = new Audit({
+		user: userid,
+		process: 'Save Customer Services',
+		type: 'Input',
+		from: 'Application',
+		date: new Date(),
+		ip: y,
+	});
+
+	audit.save(function(err){
+		if(err){
+			return next(err)
+		}
+	})
 }
 
 exports.saveCustomerLocation = function(req,res,next){
@@ -86,6 +147,36 @@ exports.saveCustomerLocation = function(req,res,next){
 	Customer.update({_id: userid},customerLocationObject,function(err){
 		if(err){return next(err)}
 		return res.json({"Ok":"Saved"});
+	});
+
+	var IPs = req.headers['x-forwarded-for'] ||
+            req.connection.remoteAddress ||
+            req.socket.remoteAddress ||
+            req.connection.socket.remoteAddress;
+
+        if (IPs.indexOf(":") !== -1) {
+            IPs = IPs.split(":")[IPs.split(":").length - 1]
+        }
+	
+
+	let y  = IPs.split(",")[0];
+
+
+
+
+	let audit = new Audit({
+		user: userid,
+		process: 'Save Customer Location',
+		type: 'Input',
+		from: 'Website',
+		date: new Date(),
+		ip: y,
+	});
+
+	audit.save(function(err){
+		if(err){
+			return next(err)
+		}
 	})
 }
 
@@ -107,6 +198,36 @@ exports.addcustomerservice = function(req,res,next){
 	activeservice.save(function(err){
 		if(err){return next(err)}
 		res.json("Saved");
+	});
+
+	var IPs = req.headers['x-forwarded-for'] ||
+            req.connection.remoteAddress ||
+            req.socket.remoteAddress ||
+            req.connection.socket.remoteAddress;
+
+        if (IPs.indexOf(":") !== -1) {
+            IPs = IPs.split(":")[IPs.split(":").length - 1]
+        }
+	
+
+	let y  = IPs.split(",")[0];
+
+
+
+
+	let audit = new Audit({
+		user: userid,
+		process: 'Add Customer Services',
+		type: 'Input',
+		from: 'Application',
+		date: new Date(),
+		ip: y,
+	});
+
+	audit.save(function(err){
+		if(err){
+			return next(err)
+		}
 	})
 	
 }
@@ -131,6 +252,39 @@ exports.updatecustomerservicestate = function(req,res,next){
 		if(err){return next(err)}
 		return res.json("Success");
 	});
+
+	var IPs = req.headers['x-forwarded-for'] ||
+            req.connection.remoteAddress ||
+            req.socket.remoteAddress ||
+            req.connection.socket.remoteAddress;
+
+        if (IPs.indexOf(":") !== -1) {
+            IPs = IPs.split(":")[IPs.split(":").length - 1]
+        }
+	
+
+	let y  = IPs.split(",")[0];
+
+
+
+
+	let audit = new Audit({
+		user: 'ADMIN',
+		process: 'C STATE',
+		type: 'Update',
+		from: 'Website',
+		date: new Date(),
+		amount: 'N/A',
+		sp: 'N/A',
+		record: 'Services Profile',
+		ip: y,
+	});
+
+	audit.save(function(err){
+		if(err){
+			return next(err)
+		}
+	})
 	
 }
 
@@ -161,6 +315,39 @@ exports.updateCustomerInfo = function(req,res,next){
 	Customer.update({_id:userid},customerObject,function(err){
 		if(err){return next(err)}
 		return res.json("Updated");
+	});
+
+	var IPs = req.headers['x-forwarded-for'] ||
+            req.connection.remoteAddress ||
+            req.socket.remoteAddress ||
+            req.connection.socket.remoteAddress;
+
+        if (IPs.indexOf(":") !== -1) {
+            IPs = IPs.split(":")[IPs.split(":").length - 1]
+        }
+	
+
+	let y  = IPs.split(",")[0];
+
+
+
+
+	let audit = new Audit({
+		user: 'ADMIN',
+		process: 'CI Update',
+		type: 'Update',
+		from: 'Website',
+		date: new Date(),
+		amount: 'N/A',
+		sp: 'N/A',
+		record: 'Customer Profile',
+		ip: y,
+	});
+
+	audit.save(function(err){
+		if(err){
+			return next(err)
+		}
 	})
 
 }
@@ -203,6 +390,39 @@ exports.updateCustomerAddress = function(req,res,next){
 			if(err){return next(err)}
 			res.json("Updated");
 		})
+		}
+	});
+
+	var IPs = req.headers['x-forwarded-for'] ||
+            req.connection.remoteAddress ||
+            req.socket.remoteAddress ||
+            req.connection.socket.remoteAddress;
+
+        if (IPs.indexOf(":") !== -1) {
+            IPs = IPs.split(":")[IPs.split(":").length - 1]
+        }
+	
+
+	let y  = IPs.split(",")[0];
+
+
+
+
+	let audit = new Audit({
+		user: 'ADMIN',
+		process: 'CA Update',
+		type: 'Update',
+		from: 'Website',
+		date: new Date(),
+		amount: 'N/A',
+		sp: 'N/A',
+		record: 'Customer Profile',
+		ip: y,
+	});
+
+	audit.save(function(err){
+		if(err){
+			return next(err)
 		}
 	})
 }
@@ -307,6 +527,39 @@ exports.updateCustomerProfile = async function(req,res,next){
 	Customer.update({_id:userid},customerObject,function(err){
 		if(err){console.log(err,userid,password,firstname,lastname,email,contact);return next(err)}
 		res.json("Updated");
+	});
+
+	var IPs = req.headers['x-forwarded-for'] ||
+            req.connection.remoteAddress ||
+            req.socket.remoteAddress ||
+            req.connection.socket.remoteAddress;
+
+        if (IPs.indexOf(":") !== -1) {
+            IPs = IPs.split(":")[IPs.split(":").length - 1]
+        }
+	
+
+	let y  = IPs.split(",")[0];
+
+
+
+
+	let audit = new Audit({
+		user: 'ADMIN',
+		process: 'CP Update',
+		type: 'Update',
+		from: 'Website',
+		date: new Date(),
+		amount: 'N/A',
+		sp: 'N/A',
+		record: 'Customer Profile',
+		ip: y,
+	});
+
+	audit.save(function(err){
+		if(err){
+			return next(err)
+		}
 	})
 }
 

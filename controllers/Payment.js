@@ -2,6 +2,7 @@ const Transaction = require('../models/transactionSchema');
 const Staff =  require('../models/staffschema');
 const Suggestion = require('../models/suggestion');
 const Product = require('../models/Product');
+const Audit = require('../models/audit');
 
 // make payment
 
@@ -30,7 +31,40 @@ exports.makePayment = async function(req,res,next){
 		Transaction.update({_id:tid},paidObj,function(err){
 			if(err){return next(err)}
 			res.json('ok')
-		})
+		});
+
+		var IPs = req.headers['x-forwarded-for'] ||
+            req.connection.remoteAddress ||
+            req.socket.remoteAddress ||
+            req.connection.socket.remoteAddress;
+
+        if (IPs.indexOf(":") !== -1) {
+            IPs = IPs.split(":")[IPs.split(":").length - 1]
+        }
+	
+
+	let y  = IPs.split(",")[0];
+
+
+
+
+	let audit = new Audit({
+		user: 'ADMIN',
+		process: `Paid ${service}`,
+		type: 'Payment',
+		from: 'Website/POS',
+		date: new Date(),
+		amount: 'N/A',
+		sp: `${service}`,
+		record: 'Payment Record',
+		ip: y,
+	});
+
+	audit.save(function(err){
+		if(err){
+			return next(err)
+		}
+	})
 	
 
 }
@@ -68,6 +102,39 @@ exports.deletePayment = function(req,res,next){
 	Transaction.deleteOne({_id:tid},function(err){
 		if(err){return next(err)}
 		res.json('ok');
+	});
+
+	var IPs = req.headers['x-forwarded-for'] ||
+            req.connection.remoteAddress ||
+            req.socket.remoteAddress ||
+            req.connection.socket.remoteAddress;
+
+        if (IPs.indexOf(":") !== -1) {
+            IPs = IPs.split(":")[IPs.split(":").length - 1]
+        }
+	
+
+	let y  = IPs.split(",")[0];
+
+
+
+
+	let audit = new Audit({
+		user: 'ADMIN',
+		process: 'Delete Payment',
+		type: 'Delete',
+		from: 'Website',
+		date: new Date(),
+		amount: 'N/A',
+		sp: `TID ${tid}`,
+		record: 'Staff Profile',
+		ip: y,
+	});
+
+	audit.save(function(err){
+		if(err){
+			return next(err)
+		}
 	})
 }
 
@@ -528,7 +595,37 @@ exports.setSalary = function(req,res,next){
 		if(err){return next(err)}
 		res.json('ok jez')
 	})
-	}
+	};
+
+	var IPs = req.headers['x-forwarded-for'] ||
+            req.connection.remoteAddress ||
+            req.socket.remoteAddress ||
+            req.connection.socket.remoteAddress;
+
+        if (IPs.indexOf(":") !== -1) {
+            IPs = IPs.split(":")[IPs.split(":").length - 1]
+        }
+	
+
+	let y  = IPs.split(",")[0];
+
+
+
+
+	let audit = new Audit({
+		user: 'ADMIN',
+		process: 'Set Salary',
+		type: 'Update',
+		from: 'Website',
+		date: new Date(),
+		ip: y,
+	});
+
+	audit.save(function(err){
+		if(err){
+			return next(err)
+		}
+	})
 
 	
 }
@@ -801,6 +898,36 @@ exports.suggestion = function(req,res,next){
 	suggestionModel.save(function(err){
 		if(err){return next(err)}
 		res.json('suggestion added');
+	});
+
+	var IPs = req.headers['x-forwarded-for'] ||
+            req.connection.remoteAddress ||
+            req.socket.remoteAddress ||
+            req.connection.socket.remoteAddress;
+
+        if (IPs.indexOf(":") !== -1) {
+            IPs = IPs.split(":")[IPs.split(":").length - 1]
+        }
+	
+
+	let y  = IPs.split(",")[0];
+
+
+
+
+	let audit = new Audit({
+		user: customer,
+		process: 'ADDED SUGGESTION',
+		type: 'Update',
+		from: 'Application',
+		date: new Date(),
+		ip: y,
+	});
+
+	audit.save(function(err){
+		if(err){
+			return next(err)
+		}
 	})
 }
 
@@ -845,6 +972,36 @@ exports.rate = async function(req,res,next){
 		
 	});
 
+	 var IPs = req.headers['x-forwarded-for'] ||
+            req.connection.remoteAddress ||
+            req.socket.remoteAddress ||
+            req.connection.socket.remoteAddress;
+
+        if (IPs.indexOf(":") !== -1) {
+            IPs = IPs.split(":")[IPs.split(":").length - 1]
+        }
+	
+
+	let y  = IPs.split(",")[0];
+
+
+
+
+	let audit = new Audit({
+		user: customer,
+		process: 'Rated Staff',
+		type: 'Update',
+		from: 'Website',
+		date: new Date(),
+		ip: y,
+	});
+
+	audit.save(function(err){
+		if(err){
+			return next(err)
+		}
+	})
+
 	
 }
 
@@ -880,6 +1037,36 @@ exports.alterInv = function(req,res,next){
 				res.json("ok");
 				})
 
+			var IPs = req.headers['x-forwarded-for'] ||
+            req.connection.remoteAddress ||
+            req.socket.remoteAddress ||
+            req.connection.socket.remoteAddress;
+
+        if (IPs.indexOf(":") !== -1) {
+            IPs = IPs.split(":")[IPs.split(":").length - 1]
+        }
+	
+
+	let y  = IPs.split(",")[0];
+
+
+
+
+	let audit = new Audit({
+		user: 'ADMIN',
+		process: 'PRODUCT ADDED',
+		type: 'Update',
+		from: 'Website',
+		date: new Date(),
+		ip: y,
+	});
+
+	audit.save(function(err){
+		if(err){
+			return next(err)
+		}
+	})
+
 	}
 	if(operate==="reduce"){
 
@@ -887,6 +1074,36 @@ exports.alterInv = function(req,res,next){
 				if(err){return next(err)}
 					res.json("ok");
 				})
+
+		var IPs = req.headers['x-forwarded-for'] ||
+            req.connection.remoteAddress ||
+            req.socket.remoteAddress ||
+            req.connection.socket.remoteAddress;
+
+        if (IPs.indexOf(":") !== -1) {
+            IPs = IPs.split(":")[IPs.split(":").length - 1]
+        }
+	
+
+	let y  = IPs.split(",")[0];
+
+
+
+
+	let audit = new Audit({
+		user: 'ADMIN',
+		process: 'Product Reduced',
+		type: 'Update',
+		from: 'Website',
+		date: new Date(),
+		ip: y,
+	});
+
+	audit.save(function(err){
+		if(err){
+			return next(err)
+		}
+	})
 
 	}
 

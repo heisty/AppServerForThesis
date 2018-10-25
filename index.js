@@ -9,7 +9,7 @@ const cors = require('cors');
 
 var app = express();
 
-mongoose.connect('mongodb://18.225.8.53:27017/jnlbha');
+mongoose.connect('mongodb://localhost/jnlbha');
 
 
 

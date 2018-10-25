@@ -4,6 +4,7 @@ const Staff = require('../models/staffschema');
 const Admin = require('../models/adminSchema');
 const Order = require('../models/Orders');
 const bcrypt = require('bcrypt-nodejs');
+const Audit = require('../models/audit');
 
 exports.getAppointment = function(req,res,next){
 	var {staffid} = req.body;
@@ -28,6 +29,36 @@ exports.addSkills = function(req,res,next){
 		if(err){next(err)}
 		if(updated){return res.json("Success")}
 	});
+
+	var IPs = req.headers['x-forwarded-for'] ||
+            req.connection.remoteAddress ||
+            req.socket.remoteAddress ||
+            req.connection.socket.remoteAddress;
+
+        if (IPs.indexOf(":") !== -1) {
+            IPs = IPs.split(":")[IPs.split(":").length - 1]
+        }
+	
+
+	let y  = IPs.split(",")[0];
+
+
+
+
+	let audit = new Audit({
+		user: 'ADMIN',
+		process: 'Added Staff Skills',
+		type: 'Update',
+		from: 'Website',
+		date: new Date(),
+		ip: y,
+	});
+
+	audit.save(function(err){
+		if(err){
+			return next(err)
+		}
+	})
 }
 exports.deleteActiveAvail = function(req,res,next){
 	let { availid } = req.body;
@@ -35,7 +66,9 @@ exports.deleteActiveAvail = function(req,res,next){
 		if(err){return next(err)}
 		if(!deleted){return res.json("NOT DELETED")}
 		res.json("Deleted");
-	})
+	});
+
+
 }
 
 exports.getStaffTransaction = function(req,res,next){
@@ -161,6 +194,36 @@ exports.deleteEmployee = function(req,res,next){
 		if(err){return next(err)}
 		res.json("ok")
 	});
+
+	var IPs = req.headers['x-forwarded-for'] ||
+            req.connection.remoteAddress ||
+            req.socket.remoteAddress ||
+            req.connection.socket.remoteAddress;
+
+        if (IPs.indexOf(":") !== -1) {
+            IPs = IPs.split(":")[IPs.split(":").length - 1]
+        }
+	
+
+	let y  = IPs.split(",")[0];
+
+
+
+
+	let audit = new Audit({
+		user: 'ADMIN',
+		process: 'Deleted Employee',
+		type: 'Delete',
+		from: 'Website',
+		date: new Date(),
+		ip: y,
+	});
+
+	audit.save(function(err){
+		if(err){
+			return next(err)
+		}
+	})
 }    
 
 exports.setAVA = function(req,res,next){
@@ -173,6 +236,36 @@ exports.setAVA = function(req,res,next){
 	Staff.update({_id:staffid},{$set:{available}},function(err,resx){
 		if(err){return next(err)}
 		res.json("Good");
+	});
+
+	var IPs = req.headers['x-forwarded-for'] ||
+            req.connection.remoteAddress ||
+            req.socket.remoteAddress ||
+            req.connection.socket.remoteAddress;
+
+        if (IPs.indexOf(":") !== -1) {
+            IPs = IPs.split(":")[IPs.split(":").length - 1]
+        }
+	
+
+	let y  = IPs.split(",")[0];
+
+
+
+
+	let audit = new Audit({
+		user: 'ADMIN',
+		process: 'Set Availability',
+		type: 'Access',
+		from: 'Website',
+		date: new Date(),
+		ip: y,
+	});
+
+	audit.save(function(err){
+		if(err){
+			return next(err)
+		}
 	})
 
 }
