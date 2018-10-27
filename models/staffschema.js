@@ -5,7 +5,7 @@ const staffSchema = mongoose.Schema({
 	// username: {type: String,unique:true},
 	// email: {type: String},
 	// password: {type: String},
-	// avatarlink: {type: String},
+	avatarURL: {type: String},
 	firstname: {type: String},
 	lastname: {type: String},
 	contact: {type: String},
