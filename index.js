@@ -13,10 +13,10 @@ mongoose.connect('mongodb://localhost/jnlbha');
 
 
 
-app.use(morgan('combined'));
-app.use(cors());
-app.use(bodyParser.json());
-app.use('/v1',router);
+// app.use(morgan('combined'));
+// app.use(cors());
+// app.use(bodyParser.json());
+// app.use('/v1',router);
 
 
 
@@ -51,32 +51,29 @@ app.use('/v1',router);
 //  res.json("ok")
   
 // })
-var PORT = process.env.PORT || 3000;
-var HOST = process.env.HOST || '192.168.30.5';
+// var PORT = process.env.PORT || 3000;
+// var HOST = process.env.HOST || '192.168.30.5';
 
-console.log('Listening on ',PORT);
-app.listen(PORT,HOST);
+// console.log('Listening on ',PORT);
+// app.listen(PORT,HOST);
 
 //ON SERVER
 
 //mongoose.connect('mongodb://admin:123admin@ds045087.mlab.com:45087/jnlbha');
 
-// app.use(morgan('combined'));
-// app.use(cors());
-// app.use(bodyParser.json());
-// app.use(function(req, res, next) {
-//     res.header("Access-Control-Allow-Origin", "*");
-//     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-//     next();
-// });
-// app.use('/v1',router);
-
-// app.get('/backup',function(req,res,next){
-// 	res.json("Okay")
-// })
+app.use(morgan('combined'));
+app.use(cors());
+app.use(bodyParser.json());
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
+app.use('/v1',router);
 
 
-// var PORT = process.env.PORT || 80;
 
-// console.log('Listening on ',PORT);
-// app.listen(PORT);  
+var PORT = process.env.PORT || 3000;
+
+console.log('Listening on ',PORT);
+app.listen(PORT);  
