@@ -93,7 +93,7 @@ exports.retrieveStaffProfile = function(req,res,next){
 
 exports.updateStaffProfile = async function(req,res,next){
 	let {
-		staffid,username,password,firstname,lastname,email,contact,address,skills
+		staffid,username,password,firstname,lastname,avatarURL,email,contact,address,skills
 	} = req.body;
 
 	await bcrypt.genSalt(10, function(err,salt){
@@ -112,7 +112,7 @@ exports.updateStaffProfile = async function(req,res,next){
 
 	// let staffObject = staff.toObject();
 
-	let stObj = {staffid,username,password,firstname,lastname,email,contact,address,skills}
+	let stObj = {staffid,username,password,firstname,lastname,avatarURL,email,contact,address,skills}
 
 	Staff.update({_id:staffid},{$set: stObj},function(err){
 		if(err){console.log(err);return next(err)}
